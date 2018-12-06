@@ -21,11 +21,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
  */
 public class ExcelOps {
 
-    public static void main(String[] args) {
-
-    }
-
-    //public temporary for testing
     private final List<String> list;
 
     public ExcelOps(String filename) {
