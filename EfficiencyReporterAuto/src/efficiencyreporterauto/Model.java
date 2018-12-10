@@ -2,12 +2,14 @@ package efficiencyreporterauto;
 
 
 
+import excelops.ExcelOps;
 import fileops.FileOps;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  *
@@ -97,6 +99,14 @@ public class Model {
         return target;
     }
 
+    List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
+        //re-write ExcelOps to throw instead of catch exceptions
+        ExcelOps excelOps = new ExcelOps();
+        excelOps.setWorkbook(excelOps.openWorkbook(filename));
+        excelOps.toList(excelOps.getWorkbook());
+        return excelOps.getList();
+    }
+    
     List<String> readFileToList(String filename) throws IOException {
         File file = new File(filename);
         FileOps fo = new FileOps(file, true);
@@ -108,9 +118,14 @@ public class Model {
         return tempList;
     }
 
-    boolean writeListToFile(String filename) {
+    boolean writeListToXlsxFile(File file) {
+        System.out.print("Function 'writeListToXlsxFile' called but it is not yet supportd");
+        return false;
+    }
+        
+    boolean writeListToFile(File file) {
 
-        FileOps fo = new FileOps(filename, true);
+        FileOps fo = new FileOps(file, true);
 
         for (Agent agent : agents) {
             try {
@@ -123,15 +138,16 @@ public class Model {
         return true;
     }
 
-    String composeFilepath(String filename) {
+    String composeFilepath(String filename, String ext) {
         StringBuilder sb = new StringBuilder();
 
-        String tempName = filename.replace(".csv", "");
+        String tempName = filename.replace(ext, "");
 
         sb.append(tempName);
         sb.append("_Processed");
-        sb.append(".csv");
+        sb.append(ext);
 
         return sb.toString();
     }
+
 }
