@@ -1,7 +1,10 @@
 package excelopstest;
 
 import excelops.ExcelOps;
+import java.io.IOException;
 import java.util.List;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -14,45 +17,63 @@ import org.junit.Test;
  * @author JShepherd
  */
 public class MyTest {
-    
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     private ExcelOps excelOps;
     private List<String> list;
-    private String filename;
-    
+
     public MyTest() {
     }
-    
+
     @Before
     public void setUp() {
-        filename = "CellOne Nov 25.xlsx";
-        excelOps = new ExcelOps(filename);
-        list = excelOps.getList();
+        excelOps = new ExcelOps();
     }
-    
+
     @After
     public void tearDown() {
     }
 
     @Test
-    public void testReadWorkbook() {
-        assertEquals("CellOne Nov 25.xlsx", filename);
-        assertNotNull("Failed: excelOps is null", excelOps);        
-    }
-    
-    @Test
     public void testWorkbookToList() {
-        assertNotNull("Failed: list is null", list);
-        excelOps.printList(list);
+        XSSFWorkbook wb = null;
+        try {
+            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
+        } catch (InvalidFormatException | IOException e){
+            System.out.println(e.getMessage());
+        }
+        if (wb != null) {
+            excelOps.setWorkbook(wb);
+            excelOps.toList(excelOps.getWorkbook());
+            list = excelOps.getList();
+            assertNotNull("Failed: list is null", list);
+            excelOps.printList(list);            
+        }
+    }
 
+    @Test
+    public void testOpenWorkbook() {
+        XSSFWorkbook wb = null;
+        
+        try {
+            wb = excelOps.openWorkbook("TestDummy.xlsx");           
+        } catch (InvalidFormatException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+ 
+        assertNotNull("Failed: workbook is null", wb);
+        System.out.println("Before wb.toString()"
+                + "\n"
+                + wb.toString()
+                + "\n"
+                + "After wb.toString()");
     }
 
 }
