@@ -1,7 +1,5 @@
 package efficiencyreporterauto;
 
-
-
 import excelops.ExcelOps;
 import fileops.FileOps;
 import java.io.File;
@@ -100,13 +98,12 @@ public class Model {
     }
 
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
-        //re-write ExcelOps to throw instead of catch exceptions
         ExcelOps excelOps = new ExcelOps();
         excelOps.setWorkbook(excelOps.openWorkbook(filename));
         excelOps.toList(excelOps.getWorkbook());
         return excelOps.getList();
     }
-    
+
     List<String> readFileToList(String filename) throws IOException {
         File file = new File(filename);
         FileOps fo = new FileOps(file, true);
@@ -122,7 +119,7 @@ public class Model {
         System.out.print("Function 'writeListToXlsxFile' called but it is not yet supportd");
         return false;
     }
-        
+
     boolean writeListToFile(File file) {
 
         FileOps fo = new FileOps(file, true);
