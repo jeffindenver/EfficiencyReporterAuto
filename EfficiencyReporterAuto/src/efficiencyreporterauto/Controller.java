@@ -8,6 +8,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  *
@@ -59,15 +60,18 @@ public class Controller {
 
                 calculateStats();
 
-                writeResults(filename);
+                writeCSVFile(filename);
+
+                writeExcelFile(filename);
             }
+
         });
     }
 
     private void getSourceList(String filename) {
         try {
-            model.setSource(model.readFileToList(filename));
-        } catch (IOException e) {
+            model.setSource(model.readExcelFileToList(filename));
+        } catch (IOException | InvalidFormatException e) {
             view.printError(e.getMessage());
         }
     }
@@ -80,9 +84,14 @@ public class Controller {
         model.calculateStats();
     }
 
-    private void writeResults(String aName) {
-        String filename = model.composeFilepath(aName);
-        model.writeListToFile(filename);
+    private void writeCSVFile(String aName) {
+        File file = new File(model.composeFilepath(aName, ".csv"));
+        model.writeListToFile(file);
+    }
+
+    private void writeExcelFile(String aName) {
+        File file = new File(model.composeFilepath(aName, ".xlsx"));
+        model.writeListToXlsxFile(file);
     }
 
     private void cleanData() {
