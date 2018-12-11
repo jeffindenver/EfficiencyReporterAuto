@@ -100,8 +100,7 @@ public class Model {
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
         ExcelOps excelOps = new ExcelOps();
         excelOps.setWorkbook(excelOps.openWorkbook(filename));
-        excelOps.toList(excelOps.getWorkbook());
-        return excelOps.getList();
+        return excelOps.sheetToList(excelOps.getWorkbook());
     }
 
     List<String> readFileToList(String filename) throws IOException {
@@ -116,7 +115,7 @@ public class Model {
     }
 
     boolean writeListToXlsxFile(File file) {
-        System.out.print("Function 'writeListToXlsxFile' called but it is not yet supportd");
+        System.out.println("Function 'writeListToXlsxFile' called but it is not yet supportd");
         return false;
     }
 
