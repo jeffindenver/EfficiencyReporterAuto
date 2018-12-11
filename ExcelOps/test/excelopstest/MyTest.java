@@ -42,38 +42,54 @@ public class MyTest {
     }
 
     @Test
-    public void testWorkbookToList() {
-        XSSFWorkbook wb = null;
-        try {
-            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
-        } catch (InvalidFormatException | IOException e){
-            System.out.println(e.getMessage());
-        }
-        if (wb != null) {
-            excelOps.setWorkbook(wb);
-            excelOps.toList(excelOps.getWorkbook());
-            list = excelOps.getList();
-            assertNotNull("Failed: list is null", list);
-            excelOps.printList(list);            
-        }
-    }
-
-    @Test
     public void testOpenWorkbook() {
         XSSFWorkbook wb = null;
-        
+
         try {
-            wb = excelOps.openWorkbook("TestDummy.xlsx");           
+            wb = excelOps.openWorkbook("TestDummy.xlsx");
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
- 
+
         assertNotNull("Failed: workbook is null", wb);
         System.out.println("Before wb.toString()"
                 + "\n"
                 + wb.toString()
                 + "\n"
                 + "After wb.toString()");
+    }
+
+    @Test
+    public void testSheetToList() {
+        XSSFWorkbook wb = null;
+        try {
+            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
+        } catch (InvalidFormatException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+        if (wb != null) {
+            excelOps.setWorkbook(wb);
+            list = excelOps.sheetToList(excelOps.getWorkbook());
+            assertNotNull("Failed: list is null", list);
+            excelOps.printList(list);
+        }
+    }
+    
+    @Test
+    public void testIndexedSheetToList() {
+        XSSFWorkbook wb = null;
+        int sheetIndex = 1;
+        try {
+            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
+        } catch (InvalidFormatException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+        if (wb != null) {
+            excelOps.setWorkbook(wb);
+            list = excelOps.sheetToList(excelOps.getWorkbook(), sheetIndex);
+            assertNotNull("Failed: list is null", list);
+            excelOps.printList(list);
+        }
     }
 
 }
