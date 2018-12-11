@@ -21,11 +21,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
  */
 public class ExcelOps {
 
-    private final List<String> list;
     private XSSFWorkbook workbook;
 
     public ExcelOps() {
-        list = new ArrayList<>();
 
     }
 
@@ -52,8 +50,18 @@ public class ExcelOps {
         return wb;
     }
 
-    public void toList(XSSFWorkbook wb) {
+    public List<String> sheetToList(XSSFWorkbook wb) {
         XSSFSheet sheet = wb.getSheetAt(0);
+        return toListHelper(sheet);
+    }
+
+    public List<String> sheetToList(XSSFWorkbook wb, int sheetIndex) {
+        XSSFSheet sheet = wb.getSheetAt(sheetIndex);
+        return toListHelper(sheet);
+    }
+    
+    private List<String> toListHelper(XSSFSheet sheet) {
+        List<String> list = new ArrayList<>();
         Iterator<Row> rowIterator = sheet.iterator();
 
         while (rowIterator.hasNext()) {
@@ -69,12 +77,15 @@ public class ExcelOps {
                     joiner.add(String.valueOf(currentCell.getNumericCellValue()));
                 }
             }
-            System.out.println(joiner.toString());
             list.add(joiner.toString());
         }
+        return list;
     }
-
+    
     private void writeSheet() {
+        //format sheet
+        //place values
+        
         int endSheet = workbook.getNumberOfSheets();
         XSSFSheet newSheet = workbook.cloneSheet(endSheet);
         XSSFRow row = newSheet.getRow(5);
@@ -87,10 +98,6 @@ public class ExcelOps {
         for (String s : list) {
             System.out.println(s);
         }
-    }
-
-    public List<String> getList() {
-        return new ArrayList<>(list);
     }
 
     public void setWorkbook(XSSFWorkbook wb) {
