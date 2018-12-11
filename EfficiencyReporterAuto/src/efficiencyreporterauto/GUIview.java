@@ -1,6 +1,7 @@
 package efficiencyreporterauto;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,10 +27,11 @@ public class GUIview {
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setOpaque(false);
         Insets inset = new Insets(20, 20, 20, 20);
+        textArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
         textArea.setMargin(inset);
         textArea.setEditable(false);
-        textArea.setBackground(Color.blue);
-        textArea.setForeground(Color.white);
+        textArea.setBackground(new Color(0, 166, 255));
+        textArea.setForeground(Color.black);
 
         frame.add(scrollPane);
         frame.setVisible(true);
