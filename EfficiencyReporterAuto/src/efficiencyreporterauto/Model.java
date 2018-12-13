@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -99,8 +100,8 @@ public class Model {
 
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
         ExcelOps excelOps = new ExcelOps();
-        excelOps.setWorkbook(excelOps.openWorkbook(filename));
-        return excelOps.sheetToList(excelOps.getWorkbook());
+        XSSFWorkbook wb = excelOps.openWorkbook(filename);
+        return excelOps.sheetToList(wb);
     }
 
     List<String> readFileToList(String filename) throws IOException {
@@ -115,8 +116,16 @@ public class Model {
     }
 
     boolean writeListToXlsxFile(File file) {
-        System.out.println("Function 'writeListToXlsxFile' called but it is not yet supportd");
-        return false;
+        ExcelOps excelOps = new ExcelOps();
+        ReportFormat reportFormat = new ReportFormat();
+        reportFormat.formatSheet(30, 10);
+        int index = 0;
+        for (Agent agent : agents) {
+            reportFormat.setCellValues(agent, index);
+            index++;
+        }
+        excelOps.writeWorkbook(reportFormat.getWorkbook(), "testFileWithFormatting.xlsx");
+        return true;
     }
 
     boolean writeListToFile(File file) {
