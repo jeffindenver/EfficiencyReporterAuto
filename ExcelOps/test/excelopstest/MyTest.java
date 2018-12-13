@@ -2,8 +2,12 @@ package excelopstest;
 
 import excelops.ExcelOps;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -68,13 +72,12 @@ public class MyTest {
             System.out.println(e.getMessage());
         }
         if (wb != null) {
-            excelOps.setWorkbook(wb);
-            list = excelOps.sheetToList(excelOps.getWorkbook());
+            list = excelOps.sheetToList(wb);
             assertNotNull("Failed: list is null", list);
             excelOps.printList(list);
         }
     }
-    
+
     @Test
     public void testIndexedSheetToList() {
         XSSFWorkbook wb = null;
@@ -85,11 +88,33 @@ public class MyTest {
             System.out.println(e.getMessage());
         }
         if (wb != null) {
-            excelOps.setWorkbook(wb);
-            list = excelOps.sheetToList(excelOps.getWorkbook(), sheetIndex);
+            list = excelOps.sheetToList(wb, sheetIndex);
             assertNotNull("Failed: list is null", list);
             excelOps.printList(list);
         }
     }
 
+    @Test
+    public void testWriteWorkbook() {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("test");
+        
+        XSSFRow row = sheet.createRow(0);
+        List<String> v = Arrays.asList("Hello", "World", "This", "Is", "a", "test");
+        
+        for (int i = 0; i < v.size(); i++) {
+            XSSFCell cell = row.createCell(i);
+            cell.setCellValue(v.get(i));
+        }
+
+        excelOps.writeWorkbook(wb, "testWrite.xlsx");
+    }
+    
+    @Test
+    public void testFormatSheet() {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        
+        excelOps.formatSheet(wb, 30, 10);
+        excelOps.writeWorkbook(wb, "testFormat.xlsx");
+    }
 }
