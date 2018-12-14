@@ -98,23 +98,15 @@ public class MyTest {
     public void testWriteWorkbook() {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("test");
-        
+
         XSSFRow row = sheet.createRow(0);
         List<String> v = Arrays.asList("Hello", "World", "This", "Is", "a", "test");
-        
+
         for (int i = 0; i < v.size(); i++) {
             XSSFCell cell = row.createCell(i);
             cell.setCellValue(v.get(i));
         }
 
         excelOps.writeWorkbook(wb, "testWrite.xlsx");
-    }
-    
-    @Test
-    public void testFormatSheet() {
-        XSSFWorkbook wb = new XSSFWorkbook();
-        
-        excelOps.formatSheet(wb, 30, 10);
-        excelOps.writeWorkbook(wb, "testFormat.xlsx");
     }
 }
