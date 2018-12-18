@@ -159,15 +159,17 @@ public class ReportFormat {
     }
 
     private void setColumnStyles() {
+        final int TOP_ROW = 4;
+        
         //column A style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(0).setCellStyle(agentNameStyle);
 
         }
 
         //column B C D E style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 1; k < 5; k++) {
                 row.getCell(k).setCellStyle(twoDecimalStyle);
@@ -175,13 +177,13 @@ public class ReportFormat {
         }
 
         //column F style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(5).setCellStyle(percentageStyle);
         }
 
         //column G H Style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 6; k < 8; k++) {
                 row.getCell(k).setCellStyle(twoDecimalStyle);
@@ -189,7 +191,7 @@ public class ReportFormat {
         }
 
         //column I J Style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 8; k < 10; k++) {
                 row.getCell(k).setCellStyle(percentageStyle);
@@ -197,12 +199,12 @@ public class ReportFormat {
         }
 
         //set column 9 style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(9).setCellStyle(lightGreenStyle);
         }
         //set column 8 style
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = TOP_ROW; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(8).setCellStyle(lightGreenStyle);
         }
