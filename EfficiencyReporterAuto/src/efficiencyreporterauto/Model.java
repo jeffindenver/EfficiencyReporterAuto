@@ -18,6 +18,7 @@ public class Model {
 
     private final List<Agent> agents;
     private List<String> source;
+    private String dateline;
 
     public Model() {
         agents = new ArrayList<>();
@@ -47,21 +48,21 @@ public class Model {
         }
     }
 
-    void cleanList(String target, String replacement) {
-        for (String line : source) {
-            if (line.contains(target)) {
-                String tempLine = line.replace(target, replacement);
-                source.set(source.indexOf(line), tempLine);
-            }
-        }
-    }
-
     void calculateStats() {
         for (Agent agent : agents) {
             for (String line : source) {
                 if (line.contains(agent.getLastName())) {
                     addStat(agent, line);
                 }
+            }
+        }
+    }
+
+    void cleanList(String target, String replacement) {
+        for (String line : source) {
+            if (line.contains(target)) {
+                String tempLine = line.replace(target, replacement);
+                source.set(source.indexOf(line), tempLine);
             }
         }
     }
@@ -115,31 +116,49 @@ public class Model {
         return tempList;
     }
 
-    boolean writeListToXlsxFile(File file) {
+    boolean writeToExistingFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
-        ReportFormat reportFormat = new ReportFormat();
-        reportFormat.formatSheet(30, 10);
+        int maxRow = agents.size();
+        XSSFWorkbook wb = excelOps.openWorkbook(filename);
+        ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
             reportFormat.setCellValues(agent, index);
             index++;
         }
-        excelOps.writeWorkbook(reportFormat.getWorkbook(), "testFileWithFormatting.xlsx");
+        excelOps.writeWorkbook(wb, filename);
         return true;
     }
 
-    boolean writeListToFile(File file) {
+    boolean writeListToXlsxFile(String filename) {
+        ExcelOps excelOps = new ExcelOps();
+        int maxRow = agents.size();
+        ReportFormat reportFormat = new ReportFormat(maxRow, dateline);
+        int index = 0;
+        for (Agent agent : agents) {
+            reportFormat.setCellValues(agent, index);
+            index++;
+        }
+        excelOps.writeWorkbook(reportFormat.getWorkbook(), filename);
+        return true;
+    }
+
+    boolean writeListToFile(File file) throws IOException {
 
         FileOps fo = new FileOps(file, true);
-
+        String output = "";
+        
         for (Agent agent : agents) {
-            try {
-                fo.writeToFile(agent.toString());
-                fo.writeToFile("\n");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
+            output += agent.toString();
+            output += "\n";
         }
+
+        try {
+            fo.writeToFile(output);
+        } catch (IOException e) {
+            throw e;
+        }
+
         return true;
     }
 
@@ -153,6 +172,12 @@ public class Model {
         sb.append(ext);
 
         return sb.toString();
+    }
+
+    void extractDate() {
+        int DATELINE = 3;
+        dateline = source.get(DATELINE);
+
     }
 
 }
