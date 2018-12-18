@@ -1,8 +1,11 @@
 package efficiencyreporterauto;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ComparisonOperator;
 import org.apache.poi.ss.usermodel.ConditionalFormattingRule;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -38,17 +41,38 @@ public class ReportFormat {
     private XSSFCellStyle percentageStyle;
     private XSSFCellStyle lightGreenStyle;
     private XSSFCellStyle separatorStyle;
+    private final int maxRow;
+    private final int maxCol;
 
-    public ReportFormat() {
-        wb = new XSSFWorkbook();
-        this.sheet = selectSheet();
-        createFonts();
-        createStyles();
-        setConditionalFormatting();
-        
+    private final int HEADER_SIZE = 4;
+    private final int COLUMN_SIZE = 10;
+
+    public ReportFormat(int max, String date) {
+        this.wb = new XSSFWorkbook();
+        this.sheet = wb.createSheet(composeSheetName(date));
+        this.maxRow = max + HEADER_SIZE;
+        this.maxCol = COLUMN_SIZE;
+        buildSheet(date);
+    }
+    
+    public ReportFormat(XSSFWorkbook workbook, int max, String date) {
+        this.wb = workbook;
+        this.sheet = wb.createSheet(composeSheetName(date));
+        this.maxRow = max + HEADER_SIZE;
+        this.maxCol = COLUMN_SIZE;
+        buildSheet(date);
     }
 
-    // Create Fonts  
+    private void buildSheet(String date) {
+        createFonts();
+        createStyles();
+        formatSheet(date);
+        setColumnStyles();
+        setBorders();
+        setFormulas();
+        setConditionalFormatting();
+    }
+    
     private void createFonts() {
         bodyFont = wb.createFont();
         bodyFont.setFontName("Calibri");
@@ -56,7 +80,7 @@ public class ReportFormat {
 
         titleFont = wb.createFont();
         titleFont.setFontName("Calibri");
-        titleFont.setFontHeightInPoints((short) 18);
+        titleFont.setFontHeightInPoints((short) 14);
         titleFont.setItalic(true);
         titleFont.setBold(true);
 
@@ -66,7 +90,230 @@ public class ReportFormat {
         headerFont.setFontHeightInPoints((short) 10);
     }
 
-    // Create Styles 
+    private void formatSheet(String date) {
+
+        for (int i = 0; i < maxRow; i++) {
+            XSSFRow row = sheet.createRow(i);
+            for (int k = 0; k < maxCol; k++) {
+                XSSFCell cell = row.createCell(k);
+            }
+        }
+
+        //row 0 blue background with company name
+        String companyName = "EMS Inc";
+        sheet.getRow(0).getCell(0).setCellValue(companyName);
+        for (Cell cell : sheet.getRow(0)) {
+            cell.setCellStyle(titleStyle);
+        }
+
+        //row 1 blue background with title
+        String title = "Performance Summary " + date.replace("\"", "");
+        sheet.getRow(1).getCell(0).setCellValue(title);
+        for (Cell cell : sheet.getRow(1)) {
+            cell.setCellStyle(titleStyle);
+        }
+
+        //merge first row
+        sheet.addMergedRegion(new CellRangeAddress(
+                0, //first row
+                0, //last row
+                0, //first col
+                maxCol - 1 //last col));
+        ));
+
+        //merge second row
+        sheet.addMergedRegion(new CellRangeAddress(
+                1, //first row
+                1, //last row
+                0, //first col
+                maxCol - 1 //last col
+        ));
+
+        //row 2 Gray background and merged
+        for (Cell cell : sheet.getRow(2)) {
+            cell.setCellStyle(separatorStyle);
+        }
+
+        sheet.addMergedRegion(new CellRangeAddress(
+                2,          //first row
+                2,          //last row
+                0,          //first col
+                maxCol - 1  //last column
+        ));
+
+        //row 3 Header
+        sheet.setColumnWidth(0, 28 * 256);
+        int width = 16 * 256;
+        for (int i = 1; i < maxCol; i++) {
+            sheet.setColumnWidth(i, width);
+        }
+
+        final String[] header = {"Agent last name", "Login Time", "Working Time", "Talk Time", "ACW Time",
+            "% ACW Time", "Available Time", "Handle Time", "Working Rate", "Occupancy"};
+
+        XSSFRow headerRow = sheet.getRow(3);
+        for (int i = 0; i < maxCol; i++) {
+            headerRow.getCell(i).setCellStyle(headerStyle);
+            headerRow.getCell(i).setCellValue(header[i]);
+        }
+    }
+
+    private void setColumnStyles() {
+        //column A style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(0).setCellStyle(agentNameStyle);
+
+        }
+
+        //column B C D E style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            for (int k = 1; k < 5; k++) {
+                row.getCell(k).setCellStyle(twoDecimalStyle);
+            }
+        }
+
+        //column F style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(5).setCellStyle(percentageStyle);
+        }
+
+        //column G H Style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            for (int k = 6; k < 8; k++) {
+                row.getCell(k).setCellStyle(twoDecimalStyle);
+            }
+        }
+
+        //column I J Style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            for (int k = 8; k < 10; k++) {
+                row.getCell(k).setCellStyle(percentageStyle);
+            }
+        }
+
+        //set column 9 style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(9).setCellStyle(lightGreenStyle);
+        }
+        //set column 8 style
+        for (int i = 4; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(8).setCellStyle(lightGreenStyle);
+        }
+    }
+
+    private void setBorders() {
+        PropertyTemplate pt = new PropertyTemplate();
+        pt.drawBorders(new CellRangeAddress(
+                4,          //first row
+                maxRow - 1, //last row
+                1,          //first col
+                maxCol - 1  //last col
+        ), BorderStyle.THIN, BorderExtent.HORIZONTAL);
+        pt.applyBorders(sheet);
+
+        pt = new PropertyTemplate();
+        pt.drawBorders(new CellRangeAddress(
+                4,          //first row
+                maxRow - 1, //last row
+                0,          //first col
+                0           //last col
+        ), BorderStyle.THIN, BorderExtent.ALL);
+        pt.applyBorders(sheet);
+
+        pt = new PropertyTemplate();
+        pt.drawBorders(new CellRangeAddress(
+                4,          //first row
+                maxRow - 1, //last row
+                8,          //first col
+                maxCol - 1  //last col
+        ), BorderStyle.THIN, BorderExtent.RIGHT);
+        pt.applyBorders(sheet);
+
+        pt = new PropertyTemplate();
+        pt.drawBorders(new CellRangeAddress(
+                4,          //first row
+                maxRow - 1, //last row
+                8,          //first col
+                maxCol - 1  //last col
+        ), BorderStyle.THIN, BorderExtent.VERTICAL);
+        pt.applyBorders(sheet);
+    }
+
+    private void setFormulas() {
+        int column = 5;
+        XSSFRow row;
+        for (int i = 4; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("IFERROR(E" + cellNum + "/B" + cellNum + ", \"-\")");
+        }
+
+        column = 6;
+        for (int i = 4; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("IFERROR(C" 
+                            + cellNum + "-D" + cellNum + ", \"-\")");
+        }
+
+        column = 7;
+        for (int i = 4; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("D" + cellNum + "+E" + cellNum);
+        }
+
+        column = 8;
+        for (int i = 4; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("IFERROR(C" 
+                            + cellNum + "/B" + cellNum + ", \"-\")");
+        }
+
+        column = 9;
+        for (int i = 4; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("IFERROR(H" 
+                            + cellNum + "/(H" + cellNum 
+                            + "+G" + cellNum + "), \"-\")");
+        }
+    }
+
+    void setCellValues(Agent agent, int rowNum) {
+        System.out.println(agent.toString());
+
+        int index = 4 + rowNum;
+        sheet.getRow(index).getCell(0).setCellType(CellType.STRING);
+        for (int i = 1; i <5; i++) {
+            sheet.getRow(index).getCell(i).setCellType(CellType.NUMERIC);            
+        }
+        
+        double dLoginTime = agent.getLoginTime().toMillis() / 1000;
+        double dWorkingTime = agent.getWorkingTime().toMillis() / 1000;
+        double dTalkTime = agent.getTalkTime().toMillis() / 1000;
+        double dAcwTime = agent.getAcwTime().toMillis() / 1000;
+        
+        sheet.getRow(index).getCell(0).setCellValue(agent.getLastName());
+        sheet.getRow(index).getCell(1).setCellValue(dLoginTime / 60);
+        sheet.getRow(index).getCell(2).setCellValue(dWorkingTime / 60);
+        sheet.getRow(index).getCell(3).setCellValue(dTalkTime / 60);
+        sheet.getRow(index).getCell(4).setCellValue(dAcwTime / 60);
+    }
+
     private void createStyles() {
         titleStyle = wb.createCellStyle();
         titleStyle.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
@@ -81,7 +328,7 @@ public class ReportFormat {
         headerStyle.setFont(headerFont);
 
         agentNameStyle = wb.createCellStyle();
-        agentNameStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        agentNameStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         agentNameStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         twoDecimalStyle = wb.createCellStyle();
@@ -104,6 +351,7 @@ public class ReportFormat {
         lightGreenStyle.setDataFormat(percentageFormat.getFormat("0.00%"));
         lightGreenStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         lightGreenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        lightGreenStyle.setAlignment(HorizontalAlignment.CENTER);
 
         separatorStyle = wb.createCellStyle();
         separatorStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
@@ -129,207 +377,26 @@ public class ReportFormat {
         ConditionalFormattingRule[] cfRules = {greaterThan80, greaterThan70, lessThan70};
 
         CellRangeAddress[] regions = {
-            CellRangeAddress.valueOf("I5:I30")
+            CellRangeAddress.valueOf("I5:I" + maxRow)
         };
 
         sheetCF.addConditionalFormatting(regions, cfRules);
     }
 
-    private XSSFSheet selectSheet() {
-        XSSFSheet asheet = wb.createSheet("formatTest");
-        return asheet;
+    private String composeSheetName(String dateline) {
+        String sheetName = parseDate(dateline);
+        return sheetName;
     }
 
-    public void formatSheet(int maxRow, int maxCol) {
-        for (int i = 0; i < maxRow; i++) {
-            XSSFRow row = sheet.createRow(i);
-            for (int k = 0; k < maxCol; k++) {
-                XSSFCell cell = row.createCell(k);
-                System.out.println("Cell created at column " + cell.getColumnIndex());
-            }
-        }
-
-//row 0 blue background, "EMS Inc" in italics, merged
-//row 1 blue background, "Performance Summary" in italics, merged 
-        sheet.getRow(0).getCell(0).setCellValue("EMS Inc");
-        for (Cell cell : sheet.getRow(0)) {
-            cell.setCellStyle(titleStyle);
-        }
-        sheet.getRow(1).getCell(0).setCellValue("Performance Summary");
-        for (Cell cell : sheet.getRow(1)) {
-            cell.setCellStyle(titleStyle);
-        }
-
-        //merge first row
-        sheet.addMergedRegion(new CellRangeAddress(
-                0, //first row
-                0, //last row
-                0, //first col
-                maxCol - 1 //last col));
-        ));
-
-        //merge second row
-        sheet.addMergedRegion(new CellRangeAddress(
-                1, //first row
-                1, //last row
-                0, //first col
-                maxCol - 1 //last col
-        ));
-
-//row 2 Gray background and merged
-        for (Cell cell : sheet.getRow(2)) {
-            cell.setCellStyle(separatorStyle);
-        }
-
-        //merge third (2) row and set color to grey
-        sheet.addMergedRegion(new CellRangeAddress(
-                2, //first row
-                2, //last row
-                0, //first col
-                maxCol - 1 //last column
-        ));
-
-//row 3 Header
-        sheet.setColumnWidth(0, 28 * 256);
-        int width = 16 * 256;
-        for (int i = 1; i < maxCol; i++) {
-            sheet.setColumnWidth(i, width);
-        }
-
-        final String[] header = {"Agent last name", "Login Time", "Working Time", "Talk Time", "ACW Time",
-            "% ACW Time", "Available Time", "Handle Time", "Working Rate", "Occupancy"};
-
-        int index = 0;
-        for (Cell cell : sheet.getRow(3)) {
-            cell.setCellStyle(headerStyle);
-            cell.setCellValue(header[index]);
-            index++;
-        }
-
-//column A style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            row.getCell(0).setCellStyle(agentNameStyle);
-        }
-
-//column B C D E style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            for (int k = 1; k < 5; k++) {
-                row.getCell(k).setCellStyle(twoDecimalStyle);
-            }
-        }
-
-//column F style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            row.getCell(5).setCellStyle(percentageStyle);
-        }
-
-//column G H Style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            for (int k = 6; k < 8; k++) {
-                row.getCell(k).setCellStyle(twoDecimalStyle);
-            }
-        }
-
-//column I J Style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            for (int k = 8; k < 10; k++) {
-                row.getCell(k).setCellStyle(percentageStyle);
-            }
-        }
-
-//set column 9 style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            row.getCell(9).setCellStyle(lightGreenStyle);
-        }
-//set column 8 style
-        for (int i = 4; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            row.getCell(8).setCellStyle(lightGreenStyle);
-        }
-
-//add top and bottom border to every row below the header
-        PropertyTemplate pt = new PropertyTemplate();
-        pt.drawBorders(new CellRangeAddress(
-                4, //first row
-                maxRow - 1,//last row
-                1, //first col
-                maxCol - 1//last col
-        ), BorderStyle.THIN, BorderExtent.HORIZONTAL);
-        pt.applyBorders(sheet);
-
-        pt = new PropertyTemplate();
-        pt.drawBorders(new CellRangeAddress(
-                4,//first row
-                maxRow - 1,//last row
-                0,//first col
-                0//last col
-        ), BorderStyle.THIN, BorderExtent.ALL);
-        pt.applyBorders(sheet);
-
-        pt = new PropertyTemplate();
-        pt.drawBorders(new CellRangeAddress(
-                4,//first row
-                maxRow - 1,//last row
-                8,//first col
-                maxCol - 1// last col
-        ), BorderStyle.THIN, BorderExtent.RIGHT);
-        pt.applyBorders(sheet);
-
-//set formulas
-        int column = 5;
-        XSSFRow row;
-        for (int i = 4; i < maxRow; i++) {
-            row = sheet.getRow(i);
-            int cellNum = i + 1;
-            row.getCell(column).setCellFormula("IFERROR(E" + cellNum + "/B" + cellNum + ", \"-\")");
-        }
-
-        column = 6;
-        for (int i = 4; i < maxRow; i++) {
-            row = sheet.getRow(i);
-            int cellNum = i + 1;
-            row.getCell(column).setCellFormula("IFERROR(C" + cellNum + "-D" + cellNum + ", \"-\")");
-        }
-
-        column = 7;
-        for (int i = 4; i < maxRow; i++) {
-            row = sheet.getRow(i);
-            int cellNum = i + 1;
-            row.getCell(column).setCellFormula("D" + cellNum + "+E" + cellNum);
-        }
-
-        column = 8;
-        for (int i = 4; i < maxRow; i++) {
-            row = sheet.getRow(i);
-            int cellNum = i + 1;
-            row.getCell(column).setCellFormula("IFERROR(C" + cellNum + "/B" + cellNum + ", \"-\")");
-        }
-
-        column = 9;
-        for (int i = 4; i < maxRow; i++) {
-            row = sheet.getRow(i);
-            int cellNum = i + 1;
-            row.getCell(column).setCellFormula("IFERROR(H" + cellNum + "/(H" + cellNum + "+G" + cellNum + "), \"-\")");
-        }
+    private String parseDate(String dateline) {
+        String[] v = dateline.split(" ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate date = LocalDate.parse(v[1], formatter);
+        System.out.println(date.getMonth() + " " + String.valueOf(date.getDayOfMonth()));
+        String month = date.getMonth().toString().substring(0, 3);
+        return month + " " + String.valueOf(date.getDayOfMonth());
     }
-
-    void setCellValues(Agent agent, int rowNum) {
-        System.out.println(agent.toString());
-        
-        int index = 4 + rowNum;
-        sheet.getRow(index).getCell(0).setCellValue(agent.getLastName());
-        sheet.getRow(index).getCell(1).setCellValue(agent.getLoginTime().toMillis() / 1000 / 60);
-        sheet.getRow(index).getCell(2).setCellValue(agent.getWorkingTime().toMillis() / 1000 / 60);
-        sheet.getRow(index).getCell(3).setCellValue(agent.getTalkTime().toMillis() /1000 / 60);
-        sheet.getRow(index).getCell(4).setCellValue(agent.getAcwTime().toMillis() / 1000 / 60);
-    }
-
+    
     XSSFWorkbook getWorkbook() {
         return this.wb;
     }
