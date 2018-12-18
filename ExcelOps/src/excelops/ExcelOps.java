@@ -1,6 +1,6 @@
 package excelops;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 
 /**
  *
@@ -28,25 +27,9 @@ public class ExcelOps {
     }
 
     public XSSFWorkbook openWorkbook(String filename) throws InvalidFormatException, IOException {
-        File file = new File(filename);
-        XSSFWorkbook wb = new XSSFWorkbook();
-
-        try {
-            wb = XSSFWorkbookFactory.createWorkbook(file, true);
-        } catch (InvalidFormatException | IOException e) {
-            System.out.println(e.getMessage());
-            throw e;
-        } finally {
-            if (wb != null) {
-                try {
-                    wb.close();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                    throw e;
-                }
-            }
+        try(FileInputStream fis = new FileInputStream(filename)) {
+            return new XSSFWorkbook(fis);
         }
-        return wb;
     }
 
     public List<String> sheetToList(XSSFWorkbook wb) {
