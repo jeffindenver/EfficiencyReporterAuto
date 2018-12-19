@@ -2,6 +2,7 @@ package efficiencyreporterauto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.StringJoiner;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,6 +14,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PatternFormatting;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
@@ -54,7 +56,7 @@ public class ReportFormat {
         this.maxCol = COLUMN_SIZE;
         buildSheet(date);
     }
-    
+
     public ReportFormat(XSSFWorkbook workbook, int max, String date) {
         this.wb = workbook;
         this.sheet = wb.createSheet(composeSheetName(date));
@@ -72,7 +74,7 @@ public class ReportFormat {
         setFormulas();
         setConditionalFormatting();
     }
-    
+
     private void createFonts() {
         bodyFont = wb.createFont();
         bodyFont.setFontName("Calibri");
@@ -135,10 +137,10 @@ public class ReportFormat {
         }
 
         sheet.addMergedRegion(new CellRangeAddress(
-                2,          //first row
-                2,          //last row
-                0,          //first col
-                maxCol - 1  //last column
+                2, //first row
+                2, //last row
+                0, //first col
+                maxCol - 1 //last column
         ));
 
         //row 3 Header
@@ -159,17 +161,17 @@ public class ReportFormat {
     }
 
     private void setColumnStyles() {
-        final int TOP_ROW = 4;
-        
+        final int topRow = 4;
+
         //column A style
-        for (int i = TOP_ROW; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(0).setCellStyle(agentNameStyle);
 
         }
 
         //column B C D E style
-        for (int i = TOP_ROW; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 1; k < 5; k++) {
                 row.getCell(k).setCellStyle(twoDecimalStyle);
@@ -177,81 +179,76 @@ public class ReportFormat {
         }
 
         //column F style
-        for (int i = TOP_ROW; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(5).setCellStyle(percentageStyle);
         }
 
         //column G H Style
-        for (int i = TOP_ROW; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 6; k < 8; k++) {
                 row.getCell(k).setCellStyle(twoDecimalStyle);
             }
         }
 
-        //column I J Style
-        for (int i = TOP_ROW; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            for (int k = 8; k < 10; k++) {
-                row.getCell(k).setCellStyle(percentageStyle);
-            }
-        }
-
-        //set column 9 style
-        for (int i = TOP_ROW; i < maxRow; i++) {
-            XSSFRow row = sheet.getRow(i);
-            row.getCell(9).setCellStyle(lightGreenStyle);
-        }
-        //set column 8 style
-        for (int i = TOP_ROW; i < maxRow; i++) {
+        //set column I style
+        for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(8).setCellStyle(lightGreenStyle);
+        }
+        
+        //set column J style
+        for (int i = topRow; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(9).setCellStyle(lightGreenStyle);
         }
     }
 
     private void setBorders() {
         PropertyTemplate pt = new PropertyTemplate();
         pt.drawBorders(new CellRangeAddress(
-                4,          //first row
+                4, //first row
                 maxRow - 1, //last row
-                1,          //first col
-                maxCol - 1  //last col
+                1, //first col
+                maxCol - 1 //last col
         ), BorderStyle.THIN, BorderExtent.HORIZONTAL);
         pt.applyBorders(sheet);
 
         pt = new PropertyTemplate();
         pt.drawBorders(new CellRangeAddress(
-                4,          //first row
+                4, //first row
                 maxRow - 1, //last row
-                0,          //first col
-                0           //last col
+                0, //first col
+                0 //last col
         ), BorderStyle.THIN, BorderExtent.ALL);
         pt.applyBorders(sheet);
 
         pt = new PropertyTemplate();
         pt.drawBorders(new CellRangeAddress(
-                4,          //first row
+                4, //first row
                 maxRow - 1, //last row
-                8,          //first col
-                maxCol - 1  //last col
+                8, //first col
+                maxCol - 1 //last col
         ), BorderStyle.THIN, BorderExtent.RIGHT);
         pt.applyBorders(sheet);
 
         pt = new PropertyTemplate();
         pt.drawBorders(new CellRangeAddress(
-                4,          //first row
+                4, //first row
                 maxRow - 1, //last row
-                8,          //first col
-                maxCol - 1  //last col
+                8, //first col
+                maxCol - 1 //last col
         ), BorderStyle.THIN, BorderExtent.VERTICAL);
         pt.applyBorders(sheet);
     }
 
     private void setFormulas() {
+        final int topRow = 4;
+
         int column = 5;
         XSSFRow row;
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
@@ -259,16 +256,16 @@ public class ReportFormat {
         }
 
         column = 6;
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
-                    .setCellFormula("IFERROR(C" 
+                    .setCellFormula("IFERROR(C"
                             + cellNum + "-D" + cellNum + ", \"-\")");
         }
 
         column = 7;
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
@@ -276,21 +273,21 @@ public class ReportFormat {
         }
 
         column = 8;
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
-                    .setCellFormula("IFERROR(C" 
+                    .setCellFormula("IFERROR(C"
                             + cellNum + "/B" + cellNum + ", \"-\")");
         }
 
         column = 9;
-        for (int i = 4; i < maxRow; i++) {
+        for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
-                    .setCellFormula("IFERROR(H" 
-                            + cellNum + "/(H" + cellNum 
+                    .setCellFormula("IFERROR(H"
+                            + cellNum + "/(H" + cellNum
                             + "+G" + cellNum + "), \"-\")");
         }
     }
@@ -300,15 +297,15 @@ public class ReportFormat {
 
         int index = 4 + rowNum;
         sheet.getRow(index).getCell(0).setCellType(CellType.STRING);
-        for (int i = 1; i <5; i++) {
-            sheet.getRow(index).getCell(i).setCellType(CellType.NUMERIC);            
+        for (int i = 1; i < 5; i++) {
+            sheet.getRow(index).getCell(i).setCellType(CellType.NUMERIC);
         }
-        
+
         double dLoginTime = agent.getLoginTime().toMillis() / 1000;
         double dWorkingTime = agent.getWorkingTime().toMillis() / 1000;
         double dTalkTime = agent.getTalkTime().toMillis() / 1000;
         double dAcwTime = agent.getAcwTime().toMillis() / 1000;
-        
+
         sheet.getRow(index).getCell(0).setCellValue(agent.getLastName());
         sheet.getRow(index).getCell(1).setCellValue(dLoginTime / 60);
         sheet.getRow(index).getCell(2).setCellValue(dWorkingTime / 60);
@@ -381,24 +378,51 @@ public class ReportFormat {
         CellRangeAddress[] regions = {
             CellRangeAddress.valueOf("I5:I" + maxRow)
         };
-
         sheetCF.addConditionalFormatting(regions, cfRules);
     }
 
     private String composeSheetName(String dateline) {
         String sheetName = parseDate(dateline);
+        //If you try to create a sheet with a duplicate name, it will fail
+        int numOfSheets = this.getWorkbook().getNumberOfSheets();
+        if (numOfSheets > 1) {
+            for (Sheet localSheet : this.getWorkbook()) {
+                if (sheetName.equalsIgnoreCase(localSheet.getSheetName())) {
+                    sheetName += " ID " + Math.random() * 1000;
+                    break;
+                }
+            }
+        }
         return sheetName;
     }
 
     private String parseDate(String dateline) {
+        //String dateline looks like "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
+        //element 1 is the date in format MM/dd/yyyy
         String[] v = dateline.split(" ");
+
+        //take the date and split again, which should give day, month, and year
+        String dateArr[] = v[1].split("/");
+
+        //date formatter fails if the day or month are not two digits, 
+        //so this pre-pends a zero if needed.
+        StringJoiner join = new StringJoiner("/");
+        for (int i = 0; i < 3; i++) {
+            if (dateArr[i].length() < 2) {
+                dateArr[i] = "0" + dateArr[i];
+            }
+            join.add(dateArr[i]);
+        }
+
+        String wellFormedDate = join.toString();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate date = LocalDate.parse(v[1], formatter);
+        LocalDate date = LocalDate.parse(wellFormedDate, formatter);
         System.out.println(date.getMonth() + " " + String.valueOf(date.getDayOfMonth()));
         String month = date.getMonth().toString().substring(0, 3);
         return month + " " + String.valueOf(date.getDayOfMonth());
     }
-    
+
     XSSFWorkbook getWorkbook() {
         return this.wb;
     }
