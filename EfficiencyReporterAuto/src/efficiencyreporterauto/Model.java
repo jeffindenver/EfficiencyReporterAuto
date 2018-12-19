@@ -37,7 +37,7 @@ public class Model {
             String splitLine[] = line.split(",");
             if (splitLine.length == 4) {
                 if (!target.contains(splitLine[0]) //avoid duplicate names
-                        && !splitLine[0].equalsIgnoreCase("Last name")) { //avoid header
+                        && !splitLine[0].equalsIgnoreCase("User ID")) { //avoid header
                     target.add(splitLine[0]);
                 }
             }
