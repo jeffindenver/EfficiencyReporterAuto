@@ -18,8 +18,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
+import org.apache.poi.xssf.usermodel.CustomIndexedColorMap;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -43,6 +46,8 @@ public class ReportFormat {
     private XSSFCellStyle percentageStyle;
     private XSSFCellStyle lightGreenStyle;
     private XSSFCellStyle separatorStyle;
+    private XSSFColor myBlue;
+    private XSSFColor myYellow;
     private final int maxRow;
     private final int maxCol;
 
@@ -66,6 +71,7 @@ public class ReportFormat {
     }
 
     private void buildSheet(String date) {
+        createColors();
         createFonts();
         createStyles();
         formatSheet(date);
@@ -74,6 +80,14 @@ public class ReportFormat {
         setFormulas();
         setConditionalFormatting();
     }
+
+    private void createColors() {
+        DefaultIndexedColorMap defaultColorMap = new DefaultIndexedColorMap();
+        byte[] rgbBlue = {(byte) 172, (byte) 212, (byte) 242};
+        byte[] rgbYellow = {(byte) 200, (byte) 220, (byte) 137};
+        this.myYellow = new XSSFColor(rgbYellow, defaultColorMap);
+        this.myBlue = new XSSFColor(rgbBlue, defaultColorMap);
+}
 
     private void createFonts() {
         bodyFont = wb.createFont();
@@ -197,7 +211,7 @@ public class ReportFormat {
             XSSFRow row = sheet.getRow(i);
             row.getCell(8).setCellStyle(lightGreenStyle);
         }
-        
+
         //set column J style
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
@@ -315,7 +329,7 @@ public class ReportFormat {
 
     private void createStyles() {
         titleStyle = wb.createCellStyle();
-        titleStyle.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+        titleStyle.setFillForegroundColor(myBlue);
         titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         titleStyle.setFont(titleFont);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
