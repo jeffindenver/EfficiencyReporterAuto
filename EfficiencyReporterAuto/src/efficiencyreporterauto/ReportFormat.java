@@ -18,7 +18,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
-import org.apache.poi.xssf.usermodel.CustomIndexedColorMap;
 import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -47,7 +46,6 @@ public class ReportFormat {
     private XSSFCellStyle lightGreenStyle;
     private XSSFCellStyle separatorStyle;
     private XSSFColor myBlue;
-    private XSSFColor myYellow;
     private final int maxRow;
     private final int maxCol;
 
@@ -84,8 +82,6 @@ public class ReportFormat {
     private void createColors() {
         DefaultIndexedColorMap defaultColorMap = new DefaultIndexedColorMap();
         byte[] rgbBlue = {(byte) 172, (byte) 212, (byte) 242};
-        byte[] rgbYellow = {(byte) 200, (byte) 220, (byte) 137};
-        this.myYellow = new XSSFColor(rgbYellow, defaultColorMap);
         this.myBlue = new XSSFColor(rgbBlue, defaultColorMap);
 }
 
@@ -382,7 +378,7 @@ public class ReportFormat {
         lessThan70Format.setFillBackgroundColor(IndexedColors.RED.getIndex());
 
         PatternFormatting greaterThan70Format = greaterThan70.createPatternFormatting();
-        greaterThan70Format.setFillBackgroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+        greaterThan70Format.setFillBackgroundColor(myBlue);
 
         PatternFormatting greaterThan80Format = greaterThan80.createPatternFormatting();
         greaterThan80Format.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.getIndex());
