@@ -2,7 +2,7 @@ package efficiencyreporterauto;
 
 /**
  * This is a second version of "EfficiencyReport" application. This version will 
- * read .xlsx/.xls files directly and then modifying or creating the same. 
+ * read .xlsx files directly and then modifying or creating the same. 
  * Previous version has .csv input and output.
  *
  * @author JShepherd
