@@ -18,7 +18,7 @@ public class Agent {
         return seconds;
     }
 
-    private final String lastName;
+    private final String userID;
     private final DateTimeFormatter timeFormatter;
 
     private Duration loginTime;
@@ -28,7 +28,7 @@ public class Agent {
 
     public Agent(String fullName) {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        this.lastName = fullName;
+        this.userID = fullName;
 
         loginTime = Duration.ZERO;
         workingTime = Duration.ZERO;
@@ -36,8 +36,8 @@ public class Agent {
         acwTime = Duration.ZERO;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getUserID() {
+        return userID;
     }
 
     public DateTimeFormatter getTimeFormatter() {
@@ -100,7 +100,7 @@ public class Agent {
         double dTalkTime = talkTime.toMillis() / 1000;
         double dAcwTime = acwTime.toMillis() / 1000;
 
-        joiner.add(this.lastName);
+        joiner.add(this.userID);
         joiner.add(String.valueOf(dLoginTime / 60));
         joiner.add(String.valueOf(dWorkingTime / 60));
         joiner.add(String.valueOf(dTalkTime / 60));
