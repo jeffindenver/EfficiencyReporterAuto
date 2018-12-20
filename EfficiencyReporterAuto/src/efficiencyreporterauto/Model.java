@@ -48,21 +48,21 @@ public class Model {
         }
     }
 
-    void calculateStats() {
-        for (Agent agent : agents) {
-            for (String line : source) {
-                if (line.contains(agent.getLastName())) {
-                    addStat(agent, line);
-                }
-            }
-        }
-    }
-
     void cleanList(String target, String replacement) {
         for (String line : source) {
             if (line.contains(target)) {
                 String tempLine = line.replace(target, replacement);
                 source.set(source.indexOf(line), tempLine);
+            }
+        }
+    }
+
+    void calculateStats() {
+        for (Agent agent : agents) {
+            for (String line : source) {
+                if (line.contains(agent.getUserID())) {
+                    addStat(agent, line);
+                }
             }
         }
     }
@@ -147,7 +147,7 @@ public class Model {
 
         FileOps fo = new FileOps(file, true);
         String output = "";
-        
+
         for (Agent agent : agents) {
             output += agent.toString();
             output += "\n";
