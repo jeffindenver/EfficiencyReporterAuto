@@ -7,7 +7,6 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -15,6 +14,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  *
  * @author JShepherd
  */
+@SuppressWarnings("serial")
 public class Controller {
 
     private final GUIview view;
@@ -30,8 +30,8 @@ public class Controller {
     }
 
     private void setupListeners() {
+        
         view.getTextArea().setDropTarget(new DropTarget() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public synchronized void drop(DropTargetDropEvent evt) {
@@ -92,8 +92,12 @@ public class Controller {
 
     private String determineOutputTarget(String filename) {
         String targetFile = filename;
-        List<String> workgroupNames = Arrays.asList("CellOne", "Drobo",
-                "Homesnap", "Newmark", "Orbit", "Shared", "Xplore", "YKHC");
+        //This list, workgroupNames, does not belong here, so take it as an argument instead.
+        //I should put the list in the ReportFormat class, and eventually the report class
+        //alternative to passing it as argument, access it via "model."
+        String[] workgroupNames = {"CellOne", "Drobo", "Homesnap", "Newmark", "Orbit",
+            "Shared", "Xplore", "YKHC"};
+
         for (String name : workgroupNames) {
             if (filename.contains(name)) {
                 targetFile = getExistingFilename(name);
@@ -103,6 +107,9 @@ public class Controller {
     }
 
     private String getExistingFilename(String name) {
+        //the switch should stay here, but I should move the path
+        //and cases to the report and pass them in as arguments
+        //or access them from model.
         String translation = "S:\\Reports\\Efficiency Reports\\";
         switch (name) {
             case "CellOne":
