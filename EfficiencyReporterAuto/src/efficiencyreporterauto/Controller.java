@@ -65,9 +65,9 @@ public class Controller {
 
                 writeToExistingFile(determineOutputTarget(filename));
 
-                writeCSVFile(filename);
+/*                writeCSVFile(filename);
 
-                writeExcelFile(filename);
+                  writeExcelFile(filename);*/
             }
 
         });
