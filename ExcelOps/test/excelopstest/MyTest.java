@@ -32,6 +32,7 @@ public class MyTest {
 
     private ExcelOps excelOps;
     private List<String> list;
+    private String testFilename;
 
     public MyTest() {
     }
@@ -39,6 +40,7 @@ public class MyTest {
     @Before
     public void setUp() {
         excelOps = new ExcelOps();
+        testFilename = "CellOne Nov 25.xlsx";
     }
 
     @After
@@ -67,7 +69,7 @@ public class MyTest {
     public void testSheetToList() {
         XSSFWorkbook wb = null;
         try {
-            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
+            wb = excelOps.openWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
@@ -83,7 +85,7 @@ public class MyTest {
         XSSFWorkbook wb = null;
         int sheetIndex = 1;
         try {
-            wb = excelOps.openWorkbook("CellOne Nov 25.xlsx");
+            wb = excelOps.openWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
