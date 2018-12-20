@@ -18,7 +18,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
-import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -46,6 +45,7 @@ public class ReportFormat {
     private XSSFCellStyle lightGreenStyle;
     private XSSFCellStyle separatorStyle;
     private XSSFColor myBlue;
+    private XSSFColor myYellow;
     private final int maxRow;
     private final int maxCol;
 
@@ -74,16 +74,18 @@ public class ReportFormat {
         createStyles();
         formatSheet(date);
         setColumnStyles();
-        setBorders();
         setFormulas();
         setConditionalFormatting();
+        setBorders();
     }
 
     private void createColors() {
-        DefaultIndexedColorMap defaultColorMap = new DefaultIndexedColorMap();
+        EfficiencyReportColorMap colorMap = new EfficiencyReportColorMap();
         byte[] rgbBlue = {(byte) 172, (byte) 212, (byte) 242};
-        this.myBlue = new XSSFColor(rgbBlue, defaultColorMap);
-}
+        byte[] rgbYellow = {(byte) 255, (byte) 220, (byte) 137};
+        this.myBlue = new XSSFColor(rgbBlue, colorMap);
+        this.myYellow = new XSSFColor(rgbYellow, colorMap);
+    }
 
     private void createFonts() {
         bodyFont = wb.createFont();
@@ -316,7 +318,7 @@ public class ReportFormat {
         double dTalkTime = agent.getTalkTime().toMillis() / 1000;
         double dAcwTime = agent.getAcwTime().toMillis() / 1000;
 
-        sheet.getRow(index).getCell(0).setCellValue(agent.getLastName());
+        sheet.getRow(index).getCell(0).setCellValue(agent.getUserID());
         sheet.getRow(index).getCell(1).setCellValue(dLoginTime / 60);
         sheet.getRow(index).getCell(2).setCellValue(dWorkingTime / 60);
         sheet.getRow(index).getCell(3).setCellValue(dTalkTime / 60);
@@ -378,7 +380,7 @@ public class ReportFormat {
         lessThan70Format.setFillBackgroundColor(IndexedColors.RED.getIndex());
 
         PatternFormatting greaterThan70Format = greaterThan70.createPatternFormatting();
-        greaterThan70Format.setFillBackgroundColor(myBlue);
+        greaterThan70Format.setFillBackgroundColor(myYellow);
 
         PatternFormatting greaterThan80Format = greaterThan80.createPatternFormatting();
         greaterThan80Format.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.getIndex());
