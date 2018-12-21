@@ -128,6 +128,7 @@ public class Model {
             reportFormat.setCellValues(agent, index);
             index++;
         }
+        wb.setActiveSheet(wb.getSheetIndex(filename));
         excelOps.writeWorkbook(wb, filename);
         return true;
     }
