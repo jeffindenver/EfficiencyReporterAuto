@@ -55,7 +55,7 @@ public class MyTest {
         XSSFWorkbook wb = null;
 
         try {
-            wb = excelOps.openXSSFWorkbook("TestDummy.xlsx");
+            wb = (XSSFWorkbook) excelOps.openWorkbook("TestDummy.xlsx");
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
@@ -72,7 +72,7 @@ public class MyTest {
     public void testSheetToList() {
         XSSFWorkbook wb = null;
         try {
-            wb = excelOps.openXSSFWorkbook(testFilename);
+            wb = (XSSFWorkbook) excelOps.openWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
@@ -88,7 +88,7 @@ public class MyTest {
         HSSFWorkbook wb = null;
         int sheetIndex = 0;
         try {
-            wb = excelOps.openHSSFWorkbook(testHSSFFilename);
+            wb = (HSSFWorkbook) excelOps.openWorkbook(testHSSFFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
@@ -104,7 +104,7 @@ public class MyTest {
         XSSFWorkbook wb = null;
         int sheetIndex = 1;
         try {
-            wb = excelOps.openXSSFWorkbook(testFilename);
+            wb = (XSSFWorkbook) excelOps.openWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
