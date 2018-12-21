@@ -121,7 +121,7 @@ public class Model {
     boolean writeToExistingFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
-        XSSFWorkbook wb = excelOps.openXSSFWorkbook(filename);
+        XSSFWorkbook wb = (XSSFWorkbook) excelOps.openWorkbook(filename);
         ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
