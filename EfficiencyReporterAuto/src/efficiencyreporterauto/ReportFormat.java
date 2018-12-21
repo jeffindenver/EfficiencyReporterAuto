@@ -157,7 +157,7 @@ public class ReportFormat {
 
         //row 3 Header
         sheet.setColumnWidth(0, 28 * 256);
-        int width = 15 * 256;
+        int width = 14 * 256;
         for (int i = 1; i < maxCol; i++) {
             sheet.setColumnWidth(i, width);
         }
