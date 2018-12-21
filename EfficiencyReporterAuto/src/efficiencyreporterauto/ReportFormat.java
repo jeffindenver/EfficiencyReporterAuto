@@ -90,7 +90,7 @@ public class ReportFormat {
     private void createFonts() {
         bodyFont = wb.createFont();
         bodyFont.setFontName("Calibri");
-        bodyFont.setFontHeightInPoints((short) 10);
+        bodyFont.setFontHeightInPoints((short) 9);
 
         titleFont = wb.createFont();
         titleFont.setFontName("Calibri");
@@ -101,7 +101,7 @@ public class ReportFormat {
         headerFont = wb.createFont();
         headerFont.setFontName("Calibri");
         headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 10);
+        headerFont.setFontHeightInPoints((short) 9);
     }
 
     private void formatSheet(String date) {
@@ -157,7 +157,7 @@ public class ReportFormat {
 
         //row 3 Header
         sheet.setColumnWidth(0, 28 * 256);
-        int width = 16 * 256;
+        int width = 15 * 256;
         for (int i = 1; i < maxCol; i++) {
             sheet.setColumnWidth(i, width);
         }
