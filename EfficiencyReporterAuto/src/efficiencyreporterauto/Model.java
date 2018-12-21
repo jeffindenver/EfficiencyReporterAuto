@@ -128,7 +128,7 @@ public class Model {
             reportFormat.setCellValues(agent, index);
             index++;
         }
-        wb.setActiveSheet(wb.getSheetIndex(filename));
+        wb.setSelectedTab(wb.getNumberOfSheets() - 1);
         excelOps.writeWorkbook(wb, filename);
         return true;
     }
