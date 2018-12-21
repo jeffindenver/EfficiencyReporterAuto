@@ -13,7 +13,9 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -23,26 +25,20 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ExcelOps {
 
     public ExcelOps() {
-
     }
 
-    public XSSFWorkbook openWorkbook(String filename) throws InvalidFormatException, IOException {
-        try(FileInputStream fis = new FileInputStream(filename)) {
-            return new XSSFWorkbook(fis);
+    public Workbook openWorkbook(String filename) throws InvalidFormatException, IOException {
+        try (FileInputStream fis = new FileInputStream(filename)) {
+            return WorkbookFactory.create(fis);
         }
     }
 
-    public List<String> sheetToList(XSSFWorkbook wb) {
-        XSSFSheet sheet = wb.getSheetAt(0);
+    public List<String> sheetToList(Workbook wb, int sheetIndex) {
+        Sheet sheet = wb.getSheetAt(sheetIndex);
         return toListHelper(sheet);
     }
 
-    public List<String> sheetToList(XSSFWorkbook wb, int sheetIndex) {
-        XSSFSheet sheet = wb.getSheetAt(sheetIndex);
-        return toListHelper(sheet);
-    }
-
-    private List<String> toListHelper(XSSFSheet sheet) {
+    private List<String> toListHelper(Sheet sheet) {
         List<String> list = new ArrayList<>();
         Iterator<Row> rowIterator = sheet.iterator();
 
