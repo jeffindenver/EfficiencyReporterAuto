@@ -21,7 +21,7 @@ public class GUIview {
     public GUIview() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setBounds(40, 40, 500, 200);
+        frame.setBounds(40, 40, 600, 300);
 
         textArea = new JTextArea("Efficiency Reporter.");
         JScrollPane scrollPane = new JScrollPane(textArea);
