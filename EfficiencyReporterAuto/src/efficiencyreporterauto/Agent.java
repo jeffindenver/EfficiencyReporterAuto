@@ -18,6 +18,8 @@ public class Agent {
         return seconds;
     }
 
+    //@TODO added fields for first and last name. Added first and last name
+    //to the source report. put first and last names in the names column
     private final String userID;
     private final DateTimeFormatter timeFormatter;
 
@@ -26,9 +28,9 @@ public class Agent {
     private Duration talkTime;
     private Duration acwTime;
 
-    public Agent(String fullName) {
+    public Agent(String userID) {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        this.userID = fullName;
+        this.userID = userID;
 
         loginTime = Duration.ZERO;
         workingTime = Duration.ZERO;
