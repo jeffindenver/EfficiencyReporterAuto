@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -101,8 +102,9 @@ public class Model {
 
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
         ExcelOps excelOps = new ExcelOps();
-        XSSFWorkbook wb = excelOps.openWorkbook(filename);
-        return excelOps.sheetToList(wb);
+        Workbook wb = excelOps.openWorkbook(filename);
+        int sheetIndex = 0;
+        return excelOps.sheetToList(wb, sheetIndex);
     }
 
     List<String> readFileToList(String filename) throws IOException {
@@ -119,7 +121,7 @@ public class Model {
     boolean writeToExistingFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
-        XSSFWorkbook wb = excelOps.openWorkbook(filename);
+        XSSFWorkbook wb = excelOps.openXSSFWorkbook(filename);
         ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
