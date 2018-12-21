@@ -4,6 +4,7 @@ import excelops.ExcelOps;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -33,6 +34,7 @@ public class MyTest {
     private ExcelOps excelOps;
     private List<String> list;
     private String testFilename;
+    private String testHSSFFilename;
 
     public MyTest() {
     }
@@ -41,6 +43,7 @@ public class MyTest {
     public void setUp() {
         excelOps = new ExcelOps();
         testFilename = "CellOne Nov 25.xlsx";
+        testHSSFFilename = "CellOne Nov 25.xls";
     }
 
     @After
@@ -52,7 +55,7 @@ public class MyTest {
         XSSFWorkbook wb = null;
 
         try {
-            wb = excelOps.openWorkbook("TestDummy.xlsx");
+            wb = excelOps.openXSSFWorkbook("TestDummy.xlsx");
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
@@ -69,23 +72,39 @@ public class MyTest {
     public void testSheetToList() {
         XSSFWorkbook wb = null;
         try {
-            wb = excelOps.openWorkbook(testFilename);
+            wb = excelOps.openXSSFWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
         if (wb != null) {
-            list = excelOps.sheetToList(wb);
+            list = excelOps.sheetToList(wb, 0);
             assertNotNull("Failed: list is null", list);
             excelOps.printList(list);
         }
     }
 
     @Test
+    public void testIndexedHSSFSheetToList() {
+        HSSFWorkbook wb = null;
+        int sheetIndex = 0;
+        try {
+            wb = excelOps.openHSSFWorkbook(testHSSFFilename);
+        } catch (InvalidFormatException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+        if (wb != null) {
+            list = excelOps.sheetToList(wb, sheetIndex);
+            assertNotNull("Failed: list is null", list);
+            excelOps.printList(list);
+        }
+    }
+    
+    @Test
     public void testIndexedSheetToList() {
         XSSFWorkbook wb = null;
         int sheetIndex = 1;
         try {
-            wb = excelOps.openWorkbook(testFilename);
+            wb = excelOps.openXSSFWorkbook(testFilename);
         } catch (InvalidFormatException | IOException e) {
             System.out.println(e.getMessage());
         }
