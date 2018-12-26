@@ -21,7 +21,7 @@ public class Agent implements Comparable<Agent> {
         
         @Override
         public Comparator<Agent> reversed() {
-            return Comparator.super.reversed(); //To change body of generated methods, choose Tools | Templates.
+            return Comparator.super.reversed(); 
         }
     };
 
@@ -55,6 +55,10 @@ public class Agent implements Comparable<Agent> {
         return userID;
     }
 
+    public String getFullname() {
+        return fname + " " + lname;
+    }
+   
     public String getFname() {
         return fname;
     }
