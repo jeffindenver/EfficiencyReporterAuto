@@ -394,7 +394,7 @@ public class ReportFormat {
     }
 
     private String composeSheetName(String dateline) {
-        String sheetName = parseDate(dateline);
+        String sheetName = getMonthAndDay(dateline);
         //If you try to create a sheet with a duplicate name, it will fail
         int numOfSheets = this.getWorkbook().getNumberOfSheets();
         if (numOfSheets > 1) {
@@ -408,31 +408,17 @@ public class ReportFormat {
         return sheetName;
     }
 
-    private String parseDate(String dateline) {
-        //String dateline looks like "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
-        //element 1 is the date in format MM/dd/yyyy
-        String[] v = dateline.split(" ");
+    static public String getMonthAndDay (String line) {
+        final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct", "Nov", "Dec"};
+        
+        //String line looks like: "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
+        String[] dateline = line.split(" ");
+        String[] tokenizedDate = dateline[1].split("/");
 
-        //take the date and split again, which should give day, month, and year
-        String dateArr[] = v[1].split("/");
-
-        //date formatter fails if the day or month are not two digits, 
-        //so this pre-pends a zero if needed.
-        StringJoiner join = new StringJoiner("/");
-        for (int i = 0; i < 3; i++) {
-            if (dateArr[i].length() < 2) {
-                dateArr[i] = "0" + dateArr[i];
-            }
-            join.add(dateArr[i]);
-        }
-
-        String wellFormedDate = join.toString();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDate date = LocalDate.parse(wellFormedDate, formatter);
-        System.out.println(date.getMonth() + " " + String.valueOf(date.getDayOfMonth()));
-        String month = date.getMonth().toString().substring(0, 3);
-        return month + " " + String.valueOf(date.getDayOfMonth());
+        int month = Integer.parseInt(tokenizedDate[0]) - 1;
+        String day = tokenizedDate[1];
+        return months[month] + " " + day;
     }
 
     XSSFWorkbook getWorkbook() {
