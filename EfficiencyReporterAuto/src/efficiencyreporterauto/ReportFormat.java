@@ -318,7 +318,7 @@ public class ReportFormat {
         double dTalkTime = agent.getTalkTime().toMillis() / 1000;
         double dAcwTime = agent.getAcwTime().toMillis() / 1000;
 
-        sheet.getRow(index).getCell(0).setCellValue(agent.getUserID());
+        sheet.getRow(index).getCell(0).setCellValue(agent.getFullname());
         sheet.getRow(index).getCell(1).setCellValue(dLoginTime / 60);
         sheet.getRow(index).getCell(2).setCellValue(dWorkingTime / 60);
         sheet.getRow(index).getCell(3).setCellValue(dTalkTime / 60);
@@ -341,6 +341,7 @@ public class ReportFormat {
         agentNameStyle = wb.createCellStyle();
         agentNameStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         agentNameStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        agentNameStyle.setFont(bodyFont);
 
         twoDecimalStyle = wb.createCellStyle();
         XSSFDataFormat twoDecimalFormat = wb.createDataFormat();
@@ -363,6 +364,7 @@ public class ReportFormat {
         lightGreenStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         lightGreenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         lightGreenStyle.setAlignment(HorizontalAlignment.CENTER);
+        lightGreenStyle.setFont(bodyFont);
 
         separatorStyle = wb.createCellStyle();
         separatorStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
