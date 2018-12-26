@@ -19,6 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Model {
 
     private final List<Agent> agents;
+
     private List<String> source;
     private String dateline;
 
@@ -58,10 +59,10 @@ public class Model {
         }
     }
 
-    void addFullName () {
+    void addFullName() {
         for (Agent agent : agents) {
             for (String line : source) {
-                if (line.contains(agent.getUserID()) 
+                if (line.contains(agent.getUserID())
                         && agent.getFname().equalsIgnoreCase("")) {
                     String[] splitLine = line.split(",");
                     agent.setFname(splitLine[1]);
@@ -70,7 +71,7 @@ public class Model {
             }
         }
     }
-    
+
     void calculateStats() {
         for (Agent agent : agents) {
             for (String line : source) {
@@ -136,7 +137,7 @@ public class Model {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
         XSSFWorkbook wb = (XSSFWorkbook) excelOps.openWorkbook(filename);
-        
+
         ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
@@ -148,11 +149,11 @@ public class Model {
         excelOps.writeWorkbook(wb, filename);
         return true;
     }
-    
+
     boolean writeListToXlsxFile(String filename) {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
-        
+
         ReportFormat reportFormat = new ReportFormat(maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
