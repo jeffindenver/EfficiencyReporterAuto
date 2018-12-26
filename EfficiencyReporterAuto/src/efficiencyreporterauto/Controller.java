@@ -30,7 +30,7 @@ public class Controller {
     }
 
     private void setupListeners() {
-        
+
         view.getTextArea().setDropTarget(new DropTarget() {
 
             @Override
@@ -63,14 +63,16 @@ public class Controller {
 
                 calculateStats();
 
+                alphaSort();
+
                 writeToExistingFile(determineOutputTarget(filename));
-
-/*                writeCSVFile(filename);
-
-                  writeExcelFile(filename);*/
             }
 
         });
+    }
+
+    private void alphaSort() {
+        model.alphaSort();
     }
 
     private void getSourceList(String filename) {
@@ -80,7 +82,7 @@ public class Controller {
             view.printError(e.getMessage());
         }
     }
-        
+
     private void writeToExistingFile(String filename) {
         try {
             model.writeToExistingFile(filename);
@@ -142,31 +144,17 @@ public class Controller {
         return translation;
     }
 
-
-
     private void extractDate() {
         model.extractDate();
     }
 
     private void initializeAgents() {
         model.initializeAgents();
+        model.addFullName();
     }
 
     private void calculateStats() {
         model.calculateStats();
-    }
-
-    private void writeCSVFile(String aName) {
-        File file = new File(model.composeFilepath(aName, ".csv"));
-        try {
-            model.writeListToFile(file);            
-        } catch (IOException e) {
-            view.printError(e.getMessage());
-        }
-    }
-
-    private void writeExcelFile(String aName) {
-        model.writeListToXlsxFile(model.composeFilepath(aName, ".xlsx"));
     }
 
     private void cleanData() {
