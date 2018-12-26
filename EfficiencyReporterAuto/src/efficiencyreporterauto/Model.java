@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -128,11 +130,12 @@ public class Model {
             reportFormat.setCellValues(agent, index);
             index++;
         }
+        deselectSheets(wb);
         wb.setSelectedTab(wb.getNumberOfSheets() - 1);
         excelOps.writeWorkbook(wb, filename);
         return true;
     }
-
+    
     boolean writeListToXlsxFile(String filename) {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
@@ -181,6 +184,12 @@ public class Model {
         int DATELINE = 3;
         dateline = source.get(DATELINE);
 
+    }
+
+    private void deselectSheets(Workbook wb) {
+        for (Sheet sheet : wb) {
+            sheet.setSelected(false);
+        }
     }
 
 }
