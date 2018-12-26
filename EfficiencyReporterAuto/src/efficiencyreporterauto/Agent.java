@@ -5,21 +5,33 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.StringJoiner;
 
 /**
  *
  * @author JShepherd
  */
-public class Agent {
+public class Agent implements Comparable<Agent> {
+    public final static Comparator<Agent> LnameComparator = new Comparator<Agent>() {
+        @Override
+        public int compare(Agent t, Agent t1) {
+            return t.getLname().compareTo(t1.getLname());
+        }
+        
+        @Override
+        public Comparator<Agent> reversed() {
+            return Comparator.super.reversed(); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
 
     public static Duration getTimeAsDuration(LocalTime time) {
         Duration seconds = Duration.of(time.toSecondOfDay(), ChronoUnit.SECONDS);
         return seconds;
     }
 
-    //@TODO added fields for first and last name. Added first and last name
-    //to the source report. put first and last names in the names column
+    private String fname;
+    private String lname;
     private final String userID;
     private final DateTimeFormatter timeFormatter;
 
@@ -31,7 +43,8 @@ public class Agent {
     public Agent(String userID) {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         this.userID = userID;
-
+        this.fname = "";
+        this.lname = "";
         loginTime = Duration.ZERO;
         workingTime = Duration.ZERO;
         talkTime = Duration.ZERO;
@@ -40,6 +53,22 @@ public class Agent {
 
     public String getUserID() {
         return userID;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+
+    void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    void setLname(String lname) {
+        this.lname = lname;
     }
 
     public DateTimeFormatter getTimeFormatter() {
@@ -92,17 +121,23 @@ public class Agent {
         }
         return additionalTime;
     }
-
+    
+    @Override
+    public int compareTo(Agent t) {
+        return this.getLname().compareToIgnoreCase(t.getLname());
+    }
+    
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(",");
 
-        double dLoginTime = loginTime.toMillis() / 1000;
-        double dWorkingTime = workingTime.toMillis() / 1000;
-        double dTalkTime = talkTime.toMillis() / 1000;
-        double dAcwTime = acwTime.toMillis() / 1000;
+        double dLoginTime = getLoginTime().toMillis() / 1000;
+        double dWorkingTime = getWorkingTime().toMillis() / 1000;
+        double dTalkTime = getTalkTime().toMillis() / 1000;
+        double dAcwTime = getAcwTime().toMillis() / 1000;
+        String fullname = getFname() + " " + getLname();
 
-        joiner.add(this.userID);
+        joiner.add(fullname);
         joiner.add(String.valueOf(dLoginTime / 60));
         joiner.add(String.valueOf(dWorkingTime / 60));
         joiner.add(String.valueOf(dTalkTime / 60));
