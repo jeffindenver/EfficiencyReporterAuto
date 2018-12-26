@@ -1,8 +1,5 @@
 package efficiencyreporterauto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.StringJoiner;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,6 +13,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -33,7 +31,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ReportFormat {
 
     private final XSSFWorkbook wb;
-    private final XSSFSheet sheet;
+    private XSSFSheet sheet;
     private Font bodyFont;
     private Font titleFont;
     private Font headerFont;
@@ -46,26 +44,28 @@ public class ReportFormat {
     private XSSFCellStyle separatorStyle;
     private XSSFColor myBlue;
     private XSSFColor myYellow;
-    private final int maxRow;
-    private final int maxCol;
+    private int maxRow;
+    private int maxCol;
 
     private final int HEADER_SIZE = 4;
     private final int COLUMN_SIZE = 10;
 
     public ReportFormat(int max, String date) {
         this.wb = new XSSFWorkbook();
-        this.sheet = wb.createSheet(composeSheetName(date));
-        this.maxRow = max + HEADER_SIZE;
-        this.maxCol = COLUMN_SIZE;
+        setUpSheet(wb, max, date);
         buildSheet(date);
     }
 
     public ReportFormat(XSSFWorkbook workbook, int max, String date) {
         this.wb = workbook;
-        this.sheet = wb.createSheet(composeSheetName(date));
+        setUpSheet(wb, max, date);
+        buildSheet(date);
+    }
+    
+    private void setUpSheet(Workbook wb, int max, String date) {
+        this.sheet = (XSSFSheet) wb.createSheet(composeSheetName(date));
         this.maxRow = max + HEADER_SIZE;
         this.maxCol = COLUMN_SIZE;
-        buildSheet(date);
     }
 
     private void buildSheet(String date) {
@@ -408,14 +408,14 @@ public class ReportFormat {
         return sheetName;
     }
 
-    static public String getMonthAndDay (String line) {
+    private String getMonthAndDay (String line) {
         final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
             "Aug", "Sep", "Oct", "Nov", "Dec"};
         
         //String line looks like: "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
         String[] dateline = line.split(" ");
         String[] tokenizedDate = dateline[1].split("/");
-
+        
         int month = Integer.parseInt(tokenizedDate[0]) - 1;
         String day = tokenizedDate[1];
         return months[month] + " " + day;
