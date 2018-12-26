@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -131,7 +130,7 @@ public class Model {
             index++;
         }
         deselectSheets(wb);
-        wb.setSelectedTab(wb.getNumberOfSheets() - 1);
+        wb.setActiveSheet(wb.getNumberOfSheets() - 1);
         excelOps.writeWorkbook(wb, filename);
         return true;
     }
