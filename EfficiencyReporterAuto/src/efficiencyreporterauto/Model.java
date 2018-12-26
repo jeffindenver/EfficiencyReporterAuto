@@ -37,16 +37,15 @@ public class Model {
         List<String> target = new ArrayList<>();
         for (String line : source) {
             String splitLine[] = line.split(",");
-            if (splitLine.length == 4) {
+            if (splitLine.length == 6) {
                 if (!target.contains(splitLine[0]) //avoid duplicate names
                         && !splitLine[0].equalsIgnoreCase("User ID")) { //avoid header
                     target.add(splitLine[0]);
                 }
             }
         }
-        target = alphaSort(target);
-        for (String name : target) {
-            agents.add(new Agent(name));
+        for (String userID : target) {
+            agents.add(new Agent(userID));
         }
     }
 
@@ -59,6 +58,19 @@ public class Model {
         }
     }
 
+    void addFullName () {
+        for (Agent agent : agents) {
+            for (String line : source) {
+                if (line.contains(agent.getUserID()) 
+                        && agent.getFname().equalsIgnoreCase("")) {
+                    String[] splitLine = line.split(",");
+                    agent.setFname(splitLine[1]);
+                    agent.setLname(splitLine[2]);
+                }
+            }
+        }
+    }
+    
     void calculateStats() {
         for (Agent agent : agents) {
             for (String line : source) {
@@ -71,9 +83,10 @@ public class Model {
 
     private void addStat(Agent agent, String line) {
         String stats[] = line.split(",");
-        String statusKey = stats[1];
-        String statusGroup = stats[2];
-        String duration = stats[3];
+
+        String statusKey = stats[3];
+        String statusGroup = stats[4];
+        String duration = stats[5];
 
         if (!statusKey.equalsIgnoreCase("gone home")) {
             agent.addLoginTime(duration);
@@ -96,9 +109,8 @@ public class Model {
         }
     }
 
-    private List<String> alphaSort(List<String> target) {
-        java.util.Collections.sort(target);
-        return target;
+    void alphaSort() {
+        java.util.Collections.sort(this.agents, Agent.LnameComparator);
     }
 
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
@@ -119,10 +131,12 @@ public class Model {
         return tempList;
     }
 
+    //With the following two methods, the cell values should be set elsewhere
     boolean writeToExistingFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
         XSSFWorkbook wb = (XSSFWorkbook) excelOps.openWorkbook(filename);
+        
         ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
@@ -138,6 +152,7 @@ public class Model {
     boolean writeListToXlsxFile(String filename) {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
+        
         ReportFormat reportFormat = new ReportFormat(maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
