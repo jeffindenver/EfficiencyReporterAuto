@@ -59,20 +59,20 @@ public class Controller {
 
                 initializeAgents();
 
+                initializeReport(filename);
+
                 cleanData();
 
                 calculateStats();
 
                 alphaSort();
 
+                model.setCellValues();
+
                 writeToExistingFile(determineOutputTarget(filename));
             }
 
         });
-    }
-
-    private void alphaSort() {
-        model.alphaSort();
     }
 
     private void getSourceList(String filename) {
@@ -81,67 +81,6 @@ public class Controller {
         } catch (IOException | InvalidFormatException e) {
             view.printError(e.getMessage());
         }
-    }
-
-    private void writeToExistingFile(String filename) {
-        try {
-            model.writeToExistingFile(filename);
-        } catch (InvalidFormatException | IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
-    private String determineOutputTarget(String filename) {
-        String targetFile = filename;
-        //This list, workgroupNames, does not belong here, so take it as an argument instead.
-        //I should put the list in the ReportFormat class, and eventually the report class
-        //alternative to passing it as argument, access it via "model."
-        String[] workgroupNames = {"CellOne", "Drobo", "Homesnap", "Newmark", "Orbit",
-            "Shared", "Xplore", "YKHC"};
-
-        for (String name : workgroupNames) {
-            if (filename.contains(name)) {
-                targetFile = getExistingFilename(name);
-            }
-        }
-        return targetFile;
-    }
-
-    private String getExistingFilename(String name) {
-        //the switch should stay here, but I should move the path
-        //and cases to the report and pass them in as arguments
-        //or access them from model.
-        String translation = "S:\\Reports\\Efficiency Reports\\";
-        switch (name) {
-            case "CellOne":
-                translation += "CellOne Efficiency 2018.xlsx";
-                break;
-            case "Drobo":
-                translation += "Drobo Efficiency 2018.xlsx";
-                break;
-            case "Homesnap":
-                translation += "Homesnap Efficiency 2018.xlsx";
-                break;
-            case "Newmark":
-                translation += "Newmark Efficiency 2018.xlsx";
-                break;
-            case "Orbit":
-                translation += "Orbit Efficiency 2018.xlsx";
-                break;
-            case "Shared":
-                translation += "Shared Support Efficiency 2018.xlsx";
-                break;
-            case "Xplore":
-                translation += "Xplore Efficiency 2018.xlsx";
-                break;
-            case "YKHC":
-                translation += "YKHC Efficiency 2018.xlsx";
-                break;
-            default:
-                translation += "new efficiency report.xlsx";
-        }
-        return translation;
     }
 
     private void extractDate() {
@@ -153,11 +92,46 @@ public class Controller {
         model.addFullName();
     }
 
-    private void calculateStats() {
-        model.calculateStats();
+    private void initializeReport(String filename) {
+        try {
+            model.initalizeReport(filename);
+        } catch (InvalidFormatException | IOException e) {
+            view.printError(e.getMessage());
+        }
     }
 
     private void cleanData() {
         model.cleanList("available, no acd", "no acd");
+    }
+
+    private void calculateStats() {
+        model.calculateStats();
+    }
+
+    private void alphaSort() {
+        model.alphaSort();
+    }
+
+    private void writeToExistingFile(String filename) {
+        try {
+            model.writeToExistingFile(filename);
+        } catch (InvalidFormatException | IOException e) {
+            view.printError(e.getMessage());
+        }
+    }
+
+    private String determineOutputTarget(String filename) {
+        String targetFile = filename;
+
+        for (String name : ReportFormat.WORKGROUP_NAMES) {
+            if (filename.contains(name)) {
+                targetFile = getExistingFilename(name);
+            }
+        }
+        return targetFile;
+    }
+
+    private String getExistingFilename(String name) {
+        return model.getReportFormat().selectTargetFile(name);
     }
 }
