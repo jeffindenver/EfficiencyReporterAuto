@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  * @author JShepherd
  */
 public class Agent implements Comparable<Agent> {
-    public final static Comparator<Agent> LnameComparator = new Comparator<Agent>() {
+    public final static Comparator<Agent> lnameComparator = new Comparator<Agent>() {
         @Override
         public int compare(Agent t, Agent t1) {
             return t.getLname().compareTo(t1.getLname());
