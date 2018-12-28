@@ -116,12 +116,15 @@ public class Controller {
     }
 
     private String determineOutputTarget(String filename) {
-        String targetFile = ReportFormat.FILEPATH + "new efficiency report.xlsx";
+        String defaultFilename = ReportFormat.FILEPATH + "new efficiency report.xlsx";
+        String targetFile = "";
 
         for (String workgroupName : ReportFormat.WORKGROUP_NAMES) {
             if (filename.contains(workgroupName)) {
                 targetFile = getExistingFilename(workgroupName);
-            } 
+            } else {
+                targetFile = defaultFilename;
+            }
         }
         return targetFile;
     }
