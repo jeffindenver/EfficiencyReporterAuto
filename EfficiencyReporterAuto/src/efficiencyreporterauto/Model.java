@@ -19,6 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Model {
 
     private final List<Agent> agents;
+    private ReportFormat reportFormat;
 
     private List<String> source;
     private String dateline;
@@ -62,8 +63,7 @@ public class Model {
     void addFullName() {
         for (Agent agent : agents) {
             for (String line : source) {
-                if (line.contains(agent.getUserID())
-                        && agent.getFname().equalsIgnoreCase("")) {
+                if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
                     String[] splitLine = line.split(",");
                     agent.setFname(splitLine[1]);
                     agent.setLname(splitLine[2]);
@@ -111,7 +111,7 @@ public class Model {
     }
 
     void alphaSort() {
-        java.util.Collections.sort(this.agents, Agent.LnameComparator);
+        java.util.Collections.sort(this.agents, Agent.lnameComparator);
     }
 
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
@@ -135,15 +135,12 @@ public class Model {
     //With the following two methods, the cell values should be set elsewhere
     boolean writeToExistingFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
-        int maxRow = agents.size();
-        XSSFWorkbook wb = (XSSFWorkbook) excelOps.openWorkbook(filename);
-
-        ReportFormat reportFormat = new ReportFormat(wb, maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
             reportFormat.setCellValues(agent, index);
             index++;
         }
+        XSSFWorkbook wb = reportFormat.getWorkbook();
         deselectSheets(wb);
         wb.setActiveSheet(wb.getNumberOfSheets() - 1);
         excelOps.writeWorkbook(wb, filename);
@@ -154,7 +151,8 @@ public class Model {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
 
-        ReportFormat reportFormat = new ReportFormat(maxRow, dateline);
+        //@TODO Test this with a report that does not have an existing file
+        reportFormat = new ReportFormat(maxRow, dateline);
         int index = 0;
         for (Agent agent : agents) {
             reportFormat.setCellValues(agent, index);
@@ -164,18 +162,17 @@ public class Model {
         return true;
     }
 
-    boolean writeListToFile(File file) throws IOException {
+    boolean writeListToCsvFile(File file) throws IOException {
 
         FileOps fo = new FileOps(file, true);
-        String output = "";
+        StringBuilder sb = new StringBuilder();
 
         for (Agent agent : agents) {
-            output += agent.toString();
-            output += "\n";
+            sb.append(agent.toString()).append("\n");
         }
 
         try {
-            fo.writeToFile(output);
+            fo.writeToFile(sb.toString());
         } catch (IOException e) {
             throw e;
         }
@@ -205,6 +202,25 @@ public class Model {
         for (Sheet sheet : wb) {
             sheet.setSelected(false);
         }
+    }
+
+    void initalizeReport(String filename) throws InvalidFormatException, IOException {
+        ExcelOps excelOps = new ExcelOps();
+        int maxRow = agents.size();
+        XSSFWorkbook wb = (XSSFWorkbook) excelOps.openWorkbook(filename);
+        this.reportFormat = new ReportFormat(wb, maxRow, dateline);
+    }
+
+    void setCellValues() {
+        int index = 0;
+        for (Agent agent : agents) {
+            reportFormat.setCellValues(agent, index);
+            index++;
+        } 
+    }
+    
+    public ReportFormat getReportFormat() {
+        return reportFormat;
     }
 
 }
