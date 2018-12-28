@@ -30,6 +30,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ReportFormat {
 
+    public final static String[] WORKGROUP_NAMES = {"CellOne", "Drobo", "Homesnap",
+        "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
+
+    public final static String FILEPATH = "S:\\Reports\\Efficiency Reports\\";
+
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
     private Font bodyFont;
@@ -52,17 +57,17 @@ public class ReportFormat {
 
     public ReportFormat(int max, String date) {
         this.wb = new XSSFWorkbook();
-        setUpSheet(wb, max, date);
+        initializeSheet(wb, max, date);
         buildSheet(date);
     }
 
     public ReportFormat(XSSFWorkbook workbook, int max, String date) {
         this.wb = workbook;
-        setUpSheet(wb, max, date);
+        initializeSheet(wb, max, date);
         buildSheet(date);
     }
-    
-    private void setUpSheet(Workbook wb, int max, String date) {
+
+    private void initializeSheet(Workbook wb, int max, String date) {
         this.sheet = (XSSFSheet) wb.createSheet(composeSheetName(date));
         this.maxRow = max + HEADER_SIZE;
         this.maxCol = COLUMN_SIZE;
@@ -162,7 +167,7 @@ public class ReportFormat {
             sheet.setColumnWidth(i, width);
         }
 
-        final String[] header = {"Agent last name", "Login Time", "Working Time", "Talk Time", "ACW Time",
+        final String[] header = {"Agent name", "Login Time", "Working Time", "Talk Time", "ACW Time",
             "% ACW Time", "Available Time", "Handle Time", "Working Rate", "Occupancy"};
 
         XSSFRow headerRow = sheet.getRow(3);
@@ -372,7 +377,6 @@ public class ReportFormat {
     }
 
     private void setConditionalFormatting() {
-        //Set conditional formatting
         SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
         ConditionalFormattingRule greaterThan80 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".8");
         ConditionalFormattingRule greaterThan70 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".7");
@@ -410,17 +414,50 @@ public class ReportFormat {
         return sheetName;
     }
 
-    private String getMonthAndDay (String line) {
+    private String getMonthAndDay(String line) {
         final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
             "Aug", "Sep", "Oct", "Nov", "Dec"};
-        
-        //String line looks like: "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
+
+        //The arg, line, looks like: "From 12/9/2018 12:00:00 AM To 12/15/2018 11:59:59 PM"
         String[] dateline = line.split(" ");
         String[] tokenizedDate = dateline[1].split("/");
-        
+
         int month = Integer.parseInt(tokenizedDate[0]) - 1;
         String day = tokenizedDate[1];
         return months[month] + " " + day;
+    }
+
+    String selectTargetFile(String name) {
+        String targetFile = ReportFormat.FILEPATH;
+        switch (name) {
+            case "CellOne":
+                targetFile += "CellOne Efficiency 2018.xlsx";
+                break;
+            case "Drobo":
+                targetFile += "Drobo Efficiency 2018.xlsx";
+                break;
+            case "Homesnap":
+                targetFile += "Homesnap Efficiency 2018.xlsx";
+                break;
+            case "Newmark":
+                targetFile += "Newmark Efficiency 2018.xlsx";
+                break;
+            case "Orbit":
+                targetFile += "Orbit Efficiency 2018.xlsx";
+                break;
+            case "Shared":
+                targetFile += "Shared Support Efficiency 2018.xlsx";
+                break;
+            case "Xplore":
+                targetFile += "Xplore Efficiency 2018.xlsx";
+                break;
+            case "YKHC":
+                targetFile += "YKHC Efficiency 2018.xlsx";
+                break;
+            default:
+                targetFile += "new efficiency report.xlsx";
+        }
+        return targetFile;
     }
 
     XSSFWorkbook getWorkbook() {
