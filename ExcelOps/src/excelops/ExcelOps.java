@@ -1,5 +1,6 @@
 package excelops;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,8 +29,13 @@ public class ExcelOps {
     }
 
     public Workbook openWorkbook(String filename) throws InvalidFormatException, IOException {
-        try (FileInputStream fis = new FileInputStream(filename)) {
-            return WorkbookFactory.create(fis);
+        File file = new File(filename);
+        if (file.exists()) {
+            try (FileInputStream fis = new FileInputStream(filename)) {
+                return WorkbookFactory.create(fis);
+            }
+        } else {
+            return new XSSFWorkbook();
         }
     }
 
