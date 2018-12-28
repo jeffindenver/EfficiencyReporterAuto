@@ -51,6 +51,23 @@ public class Model {
         }
     }
 
+    void addFullName() {
+        for (Agent agent : agents) {
+            for (String line : source) {
+                if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
+                    String[] splitLine = line.split(",");
+                    agent.setFname(splitLine[1]);
+                    agent.setLname(splitLine[2]);
+                }
+            }
+        }
+    }
+
+    void extractDate() {
+        int DATELINE = 3;
+        dateline = source.get(DATELINE);
+    }
+
     void initalizeReport(String outputTarget) throws InvalidFormatException, IOException {
         this.setOutputFilename(outputTarget);
         ExcelOps excelOps = new ExcelOps();
@@ -64,18 +81,6 @@ public class Model {
             if (line.contains(target)) {
                 String tempLine = line.replace(target, replacement);
                 source.set(source.indexOf(line), tempLine);
-            }
-        }
-    }
-
-    void addFullName() {
-        for (Agent agent : agents) {
-            for (String line : source) {
-                if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
-                    String[] splitLine = line.split(",");
-                    agent.setFname(splitLine[1]);
-                    agent.setLname(splitLine[2]);
-                }
             }
         }
     }
@@ -122,6 +127,14 @@ public class Model {
         java.util.Collections.sort(this.agents, Agent.lnameComparator);
     }
 
+    void setCellValues() {
+        int index = 0;
+        for (Agent agent : agents) {
+            reportFormat.setCellValues(agent, index);
+            index++;
+        }
+    }
+
     List<String> readExcelFileToList(String filename) throws IOException, InvalidFormatException {
         ExcelOps excelOps = new ExcelOps();
         Workbook wb = excelOps.openWorkbook(filename);
@@ -140,7 +153,6 @@ public class Model {
         return tempList;
     }
 
-    //With the following two methods, the cell values should be set elsewhere
     boolean writeToFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
         XSSFWorkbook wb = reportFormat.getWorkbook();
@@ -177,22 +189,9 @@ public class Model {
         return sb.toString();
     }
 
-    void extractDate() {
-        int DATELINE = 3;
-        dateline = source.get(DATELINE);
-    }
-
     private void deselectSheets(Workbook wb) {
         for (Sheet sheet : wb) {
             sheet.setSelected(false);
-        }
-    }
-
-    void setCellValues() {
-        int index = 0;
-        for (Agent agent : agents) {
-            reportFormat.setCellValues(agent, index);
-            index++;
         }
     }
 
