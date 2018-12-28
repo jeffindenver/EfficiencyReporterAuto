@@ -55,11 +55,9 @@ public class Controller {
             private void processFile(String filename) {
                 getSourceList(filename);
 
-                extractDate();
-
                 initializeAgents();
 
-                initializeReport(filename);
+                initializeReport(determineOutputTarget(filename));
 
                 cleanData();
 
@@ -69,7 +67,7 @@ public class Controller {
 
                 model.setCellValues();
 
-                writeToExistingFile(determineOutputTarget(filename));
+                writeToFile(model.getOutputFilename());
             }
 
         });
@@ -83,18 +81,15 @@ public class Controller {
         }
     }
 
-    private void extractDate() {
-        model.extractDate();
-    }
-
     private void initializeAgents() {
         model.initializeAgents();
         model.addFullName();
     }
 
-    private void initializeReport(String filename) {
+    private void initializeReport(String outputTarget) {
+        model.extractDate();
         try {
-            model.initalizeReport(filename);
+            model.initalizeReport(outputTarget);
         } catch (InvalidFormatException | IOException e) {
             view.printError(e.getMessage());
         }
@@ -112,26 +107,26 @@ public class Controller {
         model.alphaSort();
     }
 
-    private void writeToExistingFile(String filename) {
+    private void writeToFile(String filename) {
         try {
-            model.writeToExistingFile(filename);
+            model.writeToFile(filename);
         } catch (InvalidFormatException | IOException e) {
             view.printError(e.getMessage());
         }
     }
 
     private String determineOutputTarget(String filename) {
-        String targetFile = filename;
+        String targetFile = ReportFormat.FILEPATH + "new efficiency report.xlsx";
 
-        for (String name : ReportFormat.WORKGROUP_NAMES) {
-            if (filename.contains(name)) {
-                targetFile = getExistingFilename(name);
-            }
+        for (String workgroupName : ReportFormat.WORKGROUP_NAMES) {
+            if (filename.contains(workgroupName)) {
+                targetFile = getExistingFilename(workgroupName);
+            } 
         }
         return targetFile;
     }
 
-    private String getExistingFilename(String name) {
-        return model.getReportFormat().selectTargetFile(name);
+    private String getExistingFilename(String workgroupName) {
+        return ReportFormat.selectTargetFile(workgroupName);
     }
 }
