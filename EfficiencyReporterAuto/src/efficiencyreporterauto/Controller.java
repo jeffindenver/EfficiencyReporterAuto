@@ -17,10 +17,10 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 @SuppressWarnings("serial")
 public class Controller {
 
-    private final GUIview view;
+    private final GraphicalView view;
     private final Model model;
 
-    Controller(GUIview view, Model model) {
+    Controller(GraphicalView view, Model model) {
         this.view = view;
         this.model = model;
     }
