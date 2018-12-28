@@ -35,6 +35,39 @@ public class ReportFormat {
 
     public final static String FILEPATH = "S:\\Reports\\Efficiency Reports\\";
 
+    static String selectTargetFile(String name) {
+        String targetFile = ReportFormat.FILEPATH;
+        switch (name) {
+            case "CellOne":
+                targetFile += "CellOne Efficiency 2018.xlsx";
+                break;
+            case "Drobo":
+                targetFile += "Drobo Efficiency 2018.xlsx";
+                break;
+            case "Homesnap":
+                targetFile += "Homesnap Efficiency 2018.xlsx";
+                break;
+            case "Newmark":
+                targetFile += "Newmark Efficiency 2018.xlsx";
+                break;
+            case "Orbit":
+                targetFile += "Orbit Efficiency 2018.xlsx";
+                break;
+            case "Shared":
+                targetFile += "Shared Support Efficiency 2018.xlsx";
+                break;
+            case "Xplore":
+                targetFile += "Xplore Efficiency 2018.xlsx";
+                break;
+            case "YKHC":
+                targetFile += "YKHC Efficiency 2018.xlsx";
+                break;
+            default:
+                targetFile += "new efficiency report.xlsx";
+        }
+        return targetFile;
+    }
+
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
     private Font bodyFont;
@@ -61,8 +94,8 @@ public class ReportFormat {
         buildSheet(date);
     }
 
-    public ReportFormat(XSSFWorkbook workbook, int max, String date) {
-        this.wb = workbook;
+    public ReportFormat(Workbook workbook, int max, String date) {
+        this.wb = (XSSFWorkbook) workbook;
         initializeSheet(wb, max, date);
         buildSheet(date);
     }
@@ -425,39 +458,6 @@ public class ReportFormat {
         int month = Integer.parseInt(tokenizedDate[0]) - 1;
         String day = tokenizedDate[1];
         return months[month] + " " + day;
-    }
-
-    String selectTargetFile(String name) {
-        String targetFile = ReportFormat.FILEPATH;
-        switch (name) {
-            case "CellOne":
-                targetFile += "CellOne Efficiency 2018.xlsx";
-                break;
-            case "Drobo":
-                targetFile += "Drobo Efficiency 2018.xlsx";
-                break;
-            case "Homesnap":
-                targetFile += "Homesnap Efficiency 2018.xlsx";
-                break;
-            case "Newmark":
-                targetFile += "Newmark Efficiency 2018.xlsx";
-                break;
-            case "Orbit":
-                targetFile += "Orbit Efficiency 2018.xlsx";
-                break;
-            case "Shared":
-                targetFile += "Shared Support Efficiency 2018.xlsx";
-                break;
-            case "Xplore":
-                targetFile += "Xplore Efficiency 2018.xlsx";
-                break;
-            case "YKHC":
-                targetFile += "YKHC Efficiency 2018.xlsx";
-                break;
-            default:
-                targetFile += "new efficiency report.xlsx";
-        }
-        return targetFile;
     }
 
     XSSFWorkbook getWorkbook() {
