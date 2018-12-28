@@ -15,7 +15,7 @@ public class EfficiencyReport {
     public static void main(String[] args) {
 
         Model model = new Model();
-        GUIview view = new GUIview();
+        GraphicalView view = new GraphicalView();
         Controller controller = new Controller(view, model);
         controller.start();
     }
