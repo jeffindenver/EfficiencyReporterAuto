@@ -122,6 +122,7 @@ public class Controller {
         for (String workgroupName : ReportFormat.WORKGROUP_NAMES) {
             if (filename.contains(workgroupName)) {
                 targetFile = getExistingFilename(workgroupName);
+                break;
             } else {
                 targetFile = defaultFilename;
             }
