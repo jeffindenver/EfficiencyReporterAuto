@@ -96,30 +96,38 @@ public class Model {
     }
 
     private void addStat(Agent agent, String line) {
+
         String stats[] = line.split(",");
 
-        String statusKey = stats[3];
-        String statusGroup = stats[4];
-        String duration = stats[5];
+        if (stats.length == 6) {
 
-        if (!statusKey.equalsIgnoreCase("gone home")) {
-            agent.addLoginTime(duration);
+            String statusKey = stats[3];
+            String statusGroup = stats[4];
+            String duration = stats[5];
+
+            if (!statusKey.equalsIgnoreCase("gone home")) {
+                agent.addLoginTime(duration);
+            }
+
+            if (statusGroup.equalsIgnoreCase("followup")
+                    || statusGroup.equalsIgnoreCase("available")) {
+                agent.addWorkingTime(duration);
+            }
+
+            if (statusKey.equalsIgnoreCase("on call")
+                    || statusKey.equalsIgnoreCase("on email")
+                    || statusKey.equalsIgnoreCase("on chat")
+                    || statusKey.equalsIgnoreCase("on vm")) {
+                agent.addTalkTime(duration);
+            }
+
+            if (statusGroup.equalsIgnoreCase("followup")) {
+                agent.addAcwTime(duration);
+            }
         }
-
-        if (statusGroup.equalsIgnoreCase("followup")
-                || statusGroup.equalsIgnoreCase("available")) {
-            agent.addWorkingTime(duration);
-        }
-
-        if (statusKey.equalsIgnoreCase("on call")
-                || statusKey.equalsIgnoreCase("on email")
-                || statusKey.equalsIgnoreCase("on chat")
-                || statusKey.equalsIgnoreCase("on vm")) {
-            agent.addTalkTime(duration);
-        }
-
-        if (statusGroup.equalsIgnoreCase("followup")) {
-            agent.addAcwTime(duration);
+        else {
+            System.out.println(line);
+            System.out.println("Cannot add stat: Invlid line length");
         }
     }
 
