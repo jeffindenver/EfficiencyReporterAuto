@@ -55,12 +55,15 @@ public class Model {
     }
 
     void addFullName() {
+        int fName = 1;
+        int lName = 2;
+        
         for (Agent agent : agents) {
             for (String line : source) {
                 if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
                     String[] splitLine = line.split(",");
-                    agent.setFname(splitLine[1]);
-                    agent.setLname(splitLine[2]);
+                    agent.setFname(splitLine[fName]);
+                    agent.setLname(splitLine[lName]);
                 }
             }
         }
