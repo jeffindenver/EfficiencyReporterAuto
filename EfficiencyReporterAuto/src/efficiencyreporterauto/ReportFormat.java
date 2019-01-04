@@ -1,5 +1,6 @@
 package efficiencyreporterauto;
 
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -63,7 +64,7 @@ public class ReportFormat {
                 targetFile += "YKHC Efficiency 2019.xlsx";
                 break;
             default:
-                targetFile += "new efficiency report.xlsx";
+                targetFile += "new_efficiency_report.xlsx";
         }
         return targetFile;
     }
