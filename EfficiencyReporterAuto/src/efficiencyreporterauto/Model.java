@@ -127,7 +127,7 @@ public class Model {
         }
         else {
             System.out.println(line);
-            System.out.println("Cannot add stat: Invlid line length");
+            System.out.println("Cannot add stat: Invalid line length");
         }
     }
 
