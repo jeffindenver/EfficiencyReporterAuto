@@ -19,6 +19,7 @@ public class Controller {
 
     private final GraphicalView view;
     private final Model model;
+    private String sourceFilename;
 
     Controller(GraphicalView view, Model model) {
         this.view = view;
@@ -53,6 +54,8 @@ public class Controller {
             }
 
             private void processFile(String filename) {
+                setSourcFilename(filename);
+
                 getSourceList(filename);
 
                 initializeAgents();
@@ -69,7 +72,6 @@ public class Controller {
 
                 writeToFile(model.getOutputFilename());
             }
-
         });
     }
 
@@ -116,7 +118,8 @@ public class Controller {
     }
 
     private String determineOutputTarget(String filename) {
-        String defaultFilename = ReportFormat.FILEPATH + "new efficiency report.xlsx";
+        String defaultFilename = getSourceFilename() + "_new_efficiency_report.xlsx";
+
         String targetFile = "";
 
         for (String workgroupName : ReportFormat.WORKGROUP_NAMES) {
@@ -132,5 +135,13 @@ public class Controller {
 
     private String getExistingFilename(String workgroupName) {
         return ReportFormat.selectTargetFile(workgroupName);
+    }
+
+    public String getSourceFilename() {
+        return this.sourceFilename;
+    }
+    
+    private void setSourcFilename(String filename) {
+        this.sourceFilename = filename;
     }
 }
