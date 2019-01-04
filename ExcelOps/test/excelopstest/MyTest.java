@@ -1,7 +1,6 @@
 package excelopstest;
 
 import excelops.ExcelOps;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +33,7 @@ public class MyTest {
 
     private ExcelOps excelOps;
     private List<String> list;
+    private List<String> cpatList;
     private String testFilename;
     private String testHSSFFilename;
 
@@ -44,7 +44,7 @@ public class MyTest {
     public void setUp() {
         excelOps = new ExcelOps();
         testFilename = "CellOne Nov 25.xlsx";
-        testHSSFFilename = "CellOne Nov 25.xls";
+        testHSSFFilename = "CPaT test weekly.xls";
     }
 
     @After
@@ -94,9 +94,9 @@ public class MyTest {
             System.out.println(e.getMessage());
         }
         if (wb != null) {
-            list = excelOps.sheetToList(wb, sheetIndex);
-            assertNotNull("Failed: list is null", list);
-            excelOps.printList(list);
+            cpatList = excelOps.sheetToList(wb, sheetIndex);
+            assertNotNull("Failed: list is null", cpatList);
+            excelOps.printList(cpatList);
         }
     }
     
@@ -114,6 +114,35 @@ public class MyTest {
             assertNotNull("Failed: list is null", list);
             excelOps.printList(list);
         }
+    }
+    
+    @Test
+    public void testGetGrandTotal() {
+        HSSFWorkbook wb = null;
+        int sheetIndex = 0;
+        try {
+            wb = (HSSFWorkbook) excelOps.openWorkbook(testHSSFFilename);
+        } catch (InvalidFormatException | IOException e) {
+            System.out.println(e.getMessage());
+        }
+        if (wb != null) {
+            cpatList = excelOps.sheetToList(wb, sheetIndex);
+            assertNotNull("Failed: list is null", cpatList);
+            excelOps.printList(cpatList);
+        }
+        
+        String grandTotal = "";
+
+        int max = cpatList.size() - 1;
+        
+        for(int i = max; i >= 0; i--) {
+            String[] elements = cpatList.get(i).split(",");
+            if (elements[0].equalsIgnoreCase("Grand Total:")) {
+                grandTotal = cpatList.get(i);
+                break;
+            }
+        }
+        System.out.println(grandTotal);
     }
 
     @Test
