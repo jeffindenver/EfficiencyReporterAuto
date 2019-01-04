@@ -36,13 +36,16 @@ public class Model {
     void initializeAgents() {
         agents.clear();
 
+        int USER_ID = 0;
+        int correctLength = 6;
+        
         List<String> target = new ArrayList<>();
         for (String line : source) {
             String splitLine[] = line.split(",");
-            if (splitLine.length == 6) {
-                if (!target.contains(splitLine[0]) //avoid duplicate names
-                        && !splitLine[0].equalsIgnoreCase("User ID")) { //avoid header
-                    target.add(splitLine[0]);
+            if (splitLine.length == correctLength) {
+                if (!target.contains(splitLine[USER_ID]) //avoid duplicate names
+                        && !splitLine[USER_ID].equalsIgnoreCase("User ID")) { //avoid header
+                    target.add(splitLine[USER_ID]);
                 }
             }
         }
