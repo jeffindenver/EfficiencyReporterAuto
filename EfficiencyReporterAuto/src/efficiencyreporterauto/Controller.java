@@ -120,17 +120,17 @@ public class Controller {
     private String determineOutputTarget(String filename) {
         String defaultFilename = getSourceFilename() + "_new_efficiency_report.xlsx";
 
-        String targetFile = "";
+        String targetFilename = "";
 
         for (String workgroupName : ReportFormat.WORKGROUP_NAMES) {
             if (filename.contains(workgroupName)) {
-                targetFile = getExistingFilename(workgroupName);
+                targetFilename = getExistingFilename(workgroupName);
                 break;
             } else {
-                targetFile = defaultFilename;
+                targetFilename = defaultFilename;
             }
         }
-        return targetFile;
+        return targetFilename;
     }
 
     private String getExistingFilename(String workgroupName) {
