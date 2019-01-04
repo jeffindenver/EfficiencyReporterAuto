@@ -143,6 +143,18 @@ public class MyTest {
             }
         }
         System.out.println(grandTotal);
+        
+        XSSFWorkbook xssfWb = new XSSFWorkbook();
+        XSSFSheet sheet = xssfWb.createSheet("Grand Totals");
+
+        XSSFRow row = sheet.createRow(0);
+        String[] v = grandTotal.split(",");
+        for (int i = 0; i < v.length; i++) {
+            XSSFCell cell = row.createCell(i);
+            cell.setCellValue(v[i]);
+        }
+
+        excelOps.writeWorkbook(xssfWb, "GrandTotal.xlsx");
     }
 
     @Test
