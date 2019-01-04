@@ -30,6 +30,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class ReportFormat {
 
+    //Change ReportFormat to an abstract class then Outsource this static stuff
+    //to a new class that implements ReportFormat.
     public final static String[] WORKGROUP_NAMES = {"CellOne", "Drobo", "Homesnap",
         "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
 
