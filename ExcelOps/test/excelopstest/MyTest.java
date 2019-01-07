@@ -44,7 +44,7 @@ public class MyTest {
     public void setUp() {
         excelOps = new ExcelOps();
         testFilename = "CellOne Nov 25.xlsx";
-        testHSSFFilename = "CPaT test weekly.xls";
+        testHSSFFilename = "CPaT Summary.xls";
     }
 
     @After
@@ -117,7 +117,7 @@ public class MyTest {
     }
     
     @Test
-    public void testGetGrandTotal() {
+    public void testGetSummaryLine() {
         HSSFWorkbook wb = null;
         int sheetIndex = 0;
         try {
@@ -131,30 +131,30 @@ public class MyTest {
             excelOps.printList(cpatList);
         }
         
-        String grandTotal = "";
+        String summary = "";
 
         int max = cpatList.size() - 1;
         
         for(int i = max; i >= 0; i--) {
             String[] elements = cpatList.get(i).split(",");
-            if (elements[0].equalsIgnoreCase("Grand Total:")) {
-                grandTotal = cpatList.get(i);
+            if (elements[0].equalsIgnoreCase("Summary")) {
+                summary = cpatList.get(i);
                 break;
             }
         }
-        System.out.println(grandTotal);
+        System.out.println(summary);
         
         XSSFWorkbook xssfWb = new XSSFWorkbook();
-        XSSFSheet sheet = xssfWb.createSheet("Grand Totals");
+        XSSFSheet sheet = xssfWb.createSheet("Summary");
 
         XSSFRow row = sheet.createRow(0);
-        String[] v = grandTotal.split(",");
+        String[] v = summary.split(",");
         for (int i = 0; i < v.length; i++) {
             XSSFCell cell = row.createCell(i);
             cell.setCellValue(v[i]);
         }
 
-        excelOps.writeWorkbook(xssfWb, "GrandTotal.xlsx");
+        excelOps.writeWorkbook(xssfWb, "Summary.xlsx");
     }
 
     @Test
