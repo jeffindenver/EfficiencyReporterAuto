@@ -39,19 +39,26 @@ public class ExcelOps {
         }
     }
 
+    public List<String> sheetToTabList(Workbook wb, int sheetIndex) {
+        Sheet sheet = wb.getSheetAt(sheetIndex);
+        String delim = "\t";
+        return toListHelper(sheet, delim);
+    }
+    
     public List<String> sheetToList(Workbook wb, int sheetIndex) {
         Sheet sheet = wb.getSheetAt(sheetIndex);
-        return toListHelper(sheet);
+        String delim = ",";
+        return toListHelper(sheet, delim);
     }
 
-    private List<String> toListHelper(Sheet sheet) {
+    private List<String> toListHelper(Sheet sheet, String delim) {
         List<String> list = new ArrayList<>();
         Iterator<Row> rowIterator = sheet.iterator();
 
         while (rowIterator.hasNext()) {
             Row currentRow = rowIterator.next();
             Iterator<Cell> cellIterator = currentRow.iterator();
-            StringJoiner joiner = new StringJoiner(",");
+            StringJoiner joiner = new StringJoiner(delim);
 
             while (cellIterator.hasNext()) {
                 Cell currentCell = cellIterator.next();
