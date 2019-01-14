@@ -413,20 +413,20 @@ public class ReportFormat {
 
     private void setConditionalFormatting() {
         SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
-        ConditionalFormattingRule greaterThan80 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".8");
-        ConditionalFormattingRule greaterThan70 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".7");
-        ConditionalFormattingRule lessThan70 = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, ".7");
+        ConditionalFormattingRule greaterThan82 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".82");
+        ConditionalFormattingRule greaterThan72 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".719");
+        ConditionalFormattingRule lessThan72 = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, ".72");
 
-        PatternFormatting lessThan70Format = lessThan70.createPatternFormatting();
+        PatternFormatting lessThan70Format = lessThan72.createPatternFormatting();
         lessThan70Format.setFillBackgroundColor(IndexedColors.RED.getIndex());
 
-        PatternFormatting greaterThan70Format = greaterThan70.createPatternFormatting();
+        PatternFormatting greaterThan70Format = greaterThan72.createPatternFormatting();
         greaterThan70Format.setFillBackgroundColor(myYellow);
 
-        PatternFormatting greaterThan80Format = greaterThan80.createPatternFormatting();
+        PatternFormatting greaterThan80Format = greaterThan82.createPatternFormatting();
         greaterThan80Format.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 
-        ConditionalFormattingRule[] cfRules = {greaterThan80, greaterThan70, lessThan70};
+        ConditionalFormattingRule[] cfRules = {greaterThan82, greaterThan72, lessThan72};
 
         CellRangeAddress[] regions = {
             CellRangeAddress.valueOf("I5:I" + maxRow)
