@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  * @author JShepherd
  */
 public class Agent implements Comparable<Agent> {
-    public final static Comparator<Agent> lnameComparator = new Comparator<Agent>() {
+    final static Comparator<Agent> lnameComparator = new Comparator<Agent>() {
         @Override
         public int compare(Agent t, Agent t1) {
             return t.getLname().compareTo(t1.getLname());
@@ -25,9 +25,8 @@ public class Agent implements Comparable<Agent> {
         }
     };
 
-    public static Duration getTimeAsDuration(LocalTime time) {
-        Duration seconds = Duration.of(time.toSecondOfDay(), ChronoUnit.SECONDS);
-        return seconds;
+    private static Duration getTimeAsDuration(LocalTime time) {
+       return Duration.of(time.toSecondOfDay(), ChronoUnit.SECONDS);
     }
 
     private String fname;
@@ -51,15 +50,15 @@ public class Agent implements Comparable<Agent> {
         acwTime = Duration.ZERO;
     }
 
-    public String getUserID() {
+    String getUserID() {
         return userID;
     }
 
-    public String getFullname() {
+    String getFullname() {
         return fname + " " + lname;
     }
    
-    public String getFname() {
+    String getFname() {
         return fname;
     }
 
@@ -67,7 +66,7 @@ public class Agent implements Comparable<Agent> {
         this.fname = fname;
     }
 
-    public String getLname() {
+    private String getLname() {
         return lname;
     }
 
@@ -75,42 +74,38 @@ public class Agent implements Comparable<Agent> {
         this.lname = lname;
     }
 
-    public DateTimeFormatter getTimeFormatter() {
-        return timeFormatter;
-    }
-    
-    public Duration getLoginTime() {
+    Duration getLoginTime() {
         return loginTime;
     }
 
-    public void addLoginTime(String someTime) {
+    void addLoginTime(String someTime) {
         LocalTime additionalTime = parseTime(someTime);
         this.loginTime = loginTime.plus(Agent.getTimeAsDuration(additionalTime));
     }
 
-    public Duration getWorkingTime() {
+    Duration getWorkingTime() {
         return workingTime;
     }
 
-    public void addWorkingTime(String someTime) {
+    void addWorkingTime(String someTime) {
         LocalTime additionalTime = parseTime(someTime);
         this.workingTime = workingTime.plus(Agent.getTimeAsDuration(additionalTime));
     }
 
-    public Duration getTalkTime() {
+    Duration getTalkTime() {
         return talkTime;
     }
 
-    public void addTalkTime(String someTime) {
+    void addTalkTime(String someTime) {
         LocalTime additionalTime = parseTime(someTime);
         this.talkTime = talkTime.plus(Agent.getTimeAsDuration(additionalTime));
     }
 
-    public Duration getAcwTime() {
+    Duration getAcwTime() {
         return acwTime;
     }
 
-    public void addAcwTime(String someTime) {
+    void addAcwTime(String someTime) {
         LocalTime additionalTime = parseTime(someTime);
         this.acwTime = acwTime.plus(Agent.getTimeAsDuration(additionalTime));
     }
@@ -135,10 +130,10 @@ public class Agent implements Comparable<Agent> {
     public String toString() {
         StringJoiner joiner = new StringJoiner(",");
 
-        double dLoginTime = getLoginTime().toMillis() / 1000;
-        double dWorkingTime = getWorkingTime().toMillis() / 1000;
-        double dTalkTime = getTalkTime().toMillis() / 1000;
-        double dAcwTime = getAcwTime().toMillis() / 1000;
+        double dLoginTime = getLoginTime().toMillis() / 1000.0;
+        double dWorkingTime = getWorkingTime().toMillis() / 1000.0;
+        double dTalkTime = getTalkTime().toMillis() / 1000.0;
+        double dAcwTime = getAcwTime().toMillis() / 1000.0;
         String fullname = getFname() + " " + getLname();
 
         joiner.add(fullname);
