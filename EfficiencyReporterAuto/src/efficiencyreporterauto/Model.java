@@ -5,8 +5,8 @@ import fileops.FileOps;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,7 +30,11 @@ public class Model {
     }
 
     void setSource(List<String> list) {
-        this.source = new ArrayList<>(list);
+        List<String> lowerCaseList = list.stream()
+                .map(s -> s.toLowerCase())
+                .collect(Collectors.toList());
+        
+        this.source = new ArrayList<>(lowerCaseList);
     }
 
     void initializeAgents() {
@@ -41,7 +45,7 @@ public class Model {
         
         List<String> target = new ArrayList<>();
         for (String line : source) {
-            String splitLine[] = line.split(",");
+            String[] splitLine = line.split(",");
             if (splitLine.length == correctLength) {
                 if (!target.contains(splitLine[USER_ID]) //avoid duplicate names
                         && !splitLine[USER_ID].equalsIgnoreCase("User ID")) { //avoid header
@@ -62,8 +66,10 @@ public class Model {
             for (String line : source) {
                 if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
                     String[] splitLine = line.split(",");
-                    agent.setFname(splitLine[fName]);
-                    agent.setLname(splitLine[lName]);
+                    String capitalizedFirst = splitLine[fName].substring(0, 1).toUpperCase() + splitLine[fName].substring(1);
+                    agent.setFname(capitalizedFirst);
+                    String capitalizedSecond = splitLine[lName].substring(0, 1).toUpperCase() + splitLine[lName].substring(1);
+                    agent.setLname(capitalizedSecond);
                 }
             }
         }
@@ -103,7 +109,7 @@ public class Model {
 
     private void addStat(Agent agent, String line) {
 
-        String stats[] = line.split(",");
+        String[] stats = line.split(",");
 
         if (stats.length == 6) {
 
@@ -138,7 +144,7 @@ public class Model {
     }
 
     void alphaSort() {
-        java.util.Collections.sort(this.agents, Agent.lnameComparator);
+        this.agents.sort(Agent.lnameComparator);
     }
 
     void setCellValues() {
@@ -156,16 +162,16 @@ public class Model {
         return excelOps.sheetToList(wb, sheetIndex);
     }
 
-    List<String> readFileToList(String filename) throws IOException {
-        File file = new File(filename);
-        FileOps fo = new FileOps(file, true);
-        List<String> tempList = Collections.emptyList();
-
-        if (file.exists()) {
-            tempList = fo.readToList();
-        }
-        return tempList;
-    }
+//    List<String> readFileToList(String filename) throws IOException {
+//        File file = new File(filename);
+//        FileOps fo = new FileOps(file, true);
+//        List<String> tempList = Collections.emptyList();
+//
+//        if (file.exists()) {
+//            tempList = fo.readToList();
+//        }
+//        return tempList;
+//    }
 
     boolean writeToFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
