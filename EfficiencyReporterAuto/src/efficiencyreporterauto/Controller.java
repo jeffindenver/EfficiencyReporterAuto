@@ -15,7 +15,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  * @author JShepherd
  */
 @SuppressWarnings("serial")
-public class Controller {
+class Controller {
 
     private final GraphicalView view;
     private final Model model;
@@ -54,7 +54,7 @@ public class Controller {
             }
 
             private void processFile(String filename) {
-                setSourcFilename(filename);
+                setSourceFilename(filename);
 
                 getSourceList(filename);
 
@@ -137,11 +137,11 @@ public class Controller {
         return ReportFormat.selectTargetFile(workgroupName);
     }
 
-    public String getSourceFilename() {
+    private String getSourceFilename() {
         return this.sourceFilename;
     }
     
-    private void setSourcFilename(String filename) {
+    private void setSourceFilename(String filename) {
         this.sourceFilename = filename;
     }
 }
