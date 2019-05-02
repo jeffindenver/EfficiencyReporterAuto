@@ -33,7 +33,7 @@ public class ReportFormat {
     //Change ReportFormat to an abstract class then Outsource this static stuff
     //to a new class that implements ReportFormat.
     public final static String[] WORKGROUP_NAMES = {"CellOne", "Drobo", "Homesnap",
-        "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
+        "MSRB", "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
 
     public final static String FILEPATH = "S:\\Reports\\Efficiency Reports\\";
 
@@ -48,6 +48,9 @@ public class ReportFormat {
                 break;
             case "Homesnap":
                 targetFile += "Homesnap Efficiency 2019.xlsx";
+                break;
+            case "MSRB":
+                targetFile += "MSRB Efficiency 2019.xlsx";
                 break;
             case "Newmark":
                 targetFile += "Newmark Efficiency 2019.xlsx";
