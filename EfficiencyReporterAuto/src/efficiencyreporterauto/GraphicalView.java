@@ -13,12 +13,12 @@ import javax.swing.WindowConstants;
  *
  * @author JShepherd
  */
-public class GraphicalView {
+class GraphicalView {
 
     private final JFrame frame;
     private final JTextArea textArea;
 
-    public GraphicalView() {
+    GraphicalView() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setBounds(40, 40, 600, 300);
@@ -41,11 +41,11 @@ public class GraphicalView {
         return textArea;
     }
 
-    public void printError(String msg) {
+    void printError(String msg) {
         JOptionPane.showMessageDialog(frame, msg);
     }
 
-    public void printMessage(String msg) {
+    void printMessage(String msg) {
         textArea.append("\n");
         textArea.append(msg);
     }
