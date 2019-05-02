@@ -162,17 +162,6 @@ public class Model {
         return excelOps.sheetToList(wb, sheetIndex);
     }
 
-//    List<String> readFileToList(String filename) throws IOException {
-//        File file = new File(filename);
-//        FileOps fo = new FileOps(file, true);
-//        List<String> tempList = Collections.emptyList();
-//
-//        if (file.exists()) {
-//            tempList = fo.readToList();
-//        }
-//        return tempList;
-//    }
-
     boolean writeToFile(String filename) throws InvalidFormatException, IOException {
         ExcelOps excelOps = new ExcelOps();
         XSSFWorkbook wb = reportFormat.getWorkbook();
