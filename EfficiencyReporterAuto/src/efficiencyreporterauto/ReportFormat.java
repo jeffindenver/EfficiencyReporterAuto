@@ -85,13 +85,14 @@ public class ReportFormat {
     private XSSFCellStyle percentageStyle;
     private XSSFCellStyle lightGreenStyle;
     private XSSFCellStyle separatorStyle;
+    private XSSFCellStyle lightGreenDecimalStyle;
     private XSSFColor myBlue;
     private XSSFColor myYellow;
     private int maxRow;
     private int maxCol;
 
     private final int HEADER_SIZE = 4;
-    private final int COLUMN_SIZE = 10;
+    private final int COLUMN_SIZE = 14;
 
     public ReportFormat(int max, String date) {
         this.wb = new XSSFWorkbook();
@@ -99,15 +100,15 @@ public class ReportFormat {
         buildSheet(date);
     }
 
-    public ReportFormat(Workbook workbook, int max, String date) {
+    public ReportFormat(Workbook workbook, int maxRow, String date) {
         this.wb = (XSSFWorkbook) workbook;
-        initializeSheet(wb, max, date);
+        initializeSheet(wb, maxRow, date);
         buildSheet(date);
     }
 
-    private void initializeSheet(Workbook wb, int max, String date) {
+    private void initializeSheet(Workbook wb, int maxRow, String date) {
         this.sheet = (XSSFSheet) wb.createSheet(composeSheetName(date));
-        this.maxRow = max + HEADER_SIZE;
+        this.maxRow = maxRow + HEADER_SIZE;
         this.maxCol = COLUMN_SIZE;
     }
 
@@ -205,8 +206,9 @@ public class ReportFormat {
             sheet.setColumnWidth(i, width);
         }
 
-        final String[] header = {"Agent name", "Login Time", "Working Time", "Talk Time", "ACW Time",
-            "% ACW Time", "Available Time", "Handle Time", "Working Rate", "Occupancy"};
+        final String[] header = {"Agent name", "Login Time", "Working Time", "Talk Time",
+            "ACW Time", "% ACW Time", "Available Time", "Inbound Calls", "Oubound Calls", 
+            "Handle Time", "Adjusted Login Time", "Working Rate", "Occupancy", "TCPH"};
 
         XSSFRow headerRow = sheet.getRow(3);
         for (int i = 0; i < maxCol; i++) {
@@ -218,14 +220,14 @@ public class ReportFormat {
     private void setColumnStyles() {
         final int topRow = 4;
 
-        //column A style
+        //column A style agent name
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(0).setCellStyle(agentNameStyle);
 
         }
 
-        //column B C D E style
+        //column B C D E style login time, working time, talk time, acw time
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             for (int k = 1; k < 5; k++) {
@@ -233,30 +235,37 @@ public class ReportFormat {
             }
         }
 
-        //column F style
+        //column F style %acwTime
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
             row.getCell(5).setCellStyle(percentageStyle);
         }
 
-        //column G H Style
+        //column G H I J K Style available time, inbound calls, outbound calls,
+        //handle time, adjusted login time
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
-            for (int k = 6; k < 8; k++) {
+            for (int k = 6; k < 11; k++) {
                 row.getCell(k).setCellStyle(twoDecimalStyle);
             }
         }
-
-        //set column I style
+    
+        //Column L style working rate
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
-            row.getCell(8).setCellStyle(lightGreenStyle);
+            row.getCell(11).setCellStyle(lightGreenStyle);
         }
 
-        //set column J style
+        //Column M style occupancy
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
-            row.getCell(9).setCellStyle(lightGreenStyle);
+            row.getCell(12).setCellStyle(lightGreenStyle);
+        }
+        
+        //Column N style TCPH
+        for (int i = topRow; i < maxRow; i++) {
+            XSSFRow row = sheet.getRow(i);
+            row.getCell(13).setCellStyle(lightGreenStyle);
         }
     }
 
@@ -283,7 +292,7 @@ public class ReportFormat {
         pt.drawBorders(new CellRangeAddress(
                 4, //first row
                 maxRow - 1, //last row
-                8, //first col
+                7, //first col
                 maxCol - 1 //last col
         ), BorderStyle.THIN, BorderExtent.RIGHT);
         pt.applyBorders(sheet);
@@ -292,7 +301,7 @@ public class ReportFormat {
         pt.drawBorders(new CellRangeAddress(
                 4, //first row
                 maxRow - 1, //last row
-                8, //first col
+                7, //first col
                 maxCol - 1 //last col
         ), BorderStyle.THIN, BorderExtent.VERTICAL);
         pt.applyBorders(sheet);
@@ -319,7 +328,7 @@ public class ReportFormat {
                             + cellNum + "-D" + cellNum + ", \"-\")");
         }
 
-        column = 7;
+        column = 9;
         for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
@@ -327,7 +336,7 @@ public class ReportFormat {
                     .setCellFormula("D" + cellNum + "+E" + cellNum);
         }
 
-        column = 8;
+        column = 11;
         for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
@@ -336,14 +345,24 @@ public class ReportFormat {
                             + cellNum + "/B" + cellNum + ", \"-\")");
         }
 
-        column = 9;
+        column = 12;
         for (int i = topRow; i < maxRow; i++) {
             row = sheet.getRow(i);
             int cellNum = i + 1;
             row.getCell(column)
-                    .setCellFormula("IFERROR(H"
-                            + cellNum + "/(H" + cellNum
+                    .setCellFormula("IFERROR(J"
+                            + cellNum + "/(J" + cellNum
                             + "+G" + cellNum + "), \"-\")");
+        }
+        
+        column = 13;
+        for (int i = topRow; i < maxRow; i++) {
+            row = sheet.getRow(i);
+            int cellNum = i + 1;
+            row.getCell(column)
+                    .setCellFormula("(H" + cellNum
+                            + "+" + "I" + cellNum + ")/(K" 
+                            + cellNum + " / 60)");
         }
     }
 
@@ -360,12 +379,15 @@ public class ReportFormat {
         double dWorkingTime = agent.getWorkingTime().toMillis() / 1000;
         double dTalkTime = agent.getTalkTime().toMillis() / 1000;
         double dAcwTime = agent.getAcwTime().toMillis() / 1000;
+        double dNegativeTime = agent.getBreaksAndOtherTime().toMillis() / 1000;
+        double dAdjustedLoginTime = dLoginTime - dNegativeTime;
 
         sheet.getRow(index).getCell(0).setCellValue(agent.getFullname());
         sheet.getRow(index).getCell(1).setCellValue(dLoginTime / 60);
         sheet.getRow(index).getCell(2).setCellValue(dWorkingTime / 60);
         sheet.getRow(index).getCell(3).setCellValue(dTalkTime / 60);
         sheet.getRow(index).getCell(4).setCellValue(dAcwTime / 60);
+        sheet.getRow(index).getCell(10).setCellValue(dAdjustedLoginTime / 60);
     }
 
     private void createStyles() {
@@ -408,6 +430,13 @@ public class ReportFormat {
         lightGreenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         lightGreenStyle.setAlignment(HorizontalAlignment.CENTER);
         lightGreenStyle.setFont(bodyFont);
+        
+        lightGreenDecimalStyle = wb.createCellStyle();
+        lightGreenDecimalStyle.setDataFormat(twoDecimalFormat.getFormat("0.00"));
+        lightGreenDecimalStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        lightGreenDecimalStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        lightGreenDecimalStyle.setAlignment(HorizontalAlignment.CENTER);
+        lightGreenDecimalStyle.setFont(bodyFont);
 
         separatorStyle = wb.createCellStyle();
         separatorStyle.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
@@ -432,7 +461,7 @@ public class ReportFormat {
         ConditionalFormattingRule[] cfRules = {greaterThan82, greaterThan72, lessThan72};
 
         CellRangeAddress[] regions = {
-            CellRangeAddress.valueOf("I5:I" + maxRow)
+            CellRangeAddress.valueOf("L5:L" + maxRow)
         };
         sheetCF.addConditionalFormatting(regions, cfRules);
     }
