@@ -40,20 +40,20 @@ public class Model {
     void initializeAgents() {
         agents.clear();
 
-        int USER_ID = 0;
+        int USER_ID_INDEX = 0;
         int correctLength = 6;
         
-        List<String> target = new ArrayList<>();
+        List<String> targetList = new ArrayList<>();
         for (String line : source) {
             String[] splitLine = line.split(",");
             if (splitLine.length == correctLength) {
-                if (!target.contains(splitLine[USER_ID]) //avoid duplicate names
-                        && !splitLine[USER_ID].equalsIgnoreCase("User ID")) { //avoid header
-                    target.add(splitLine[USER_ID]);
+                if (!targetList.contains(splitLine[USER_ID_INDEX]) //avoid duplicate names
+                    && !splitLine[USER_ID_INDEX].equalsIgnoreCase("User ID")) { //avoid header
+                    targetList.add(splitLine[USER_ID_INDEX]);
                 }
             }
         }
-        for (String userID : target) {
+        for (String userID : targetList) {
             agents.add(new Agent(userID));
         }
     }
@@ -76,8 +76,8 @@ public class Model {
     }
 
     void extractDate() {
-        int DATELINE = 3;
-        dateline = source.get(DATELINE);
+        int DATELINE_INDEX = 3;
+        dateline = source.get(DATELINE_INDEX);
     }
 
     void initalizeReport(String outputTarget) throws InvalidFormatException, IOException {
@@ -133,6 +133,14 @@ public class Model {
                 agent.addTalkTime(duration);
             }
 
+            if (statusKey.equalsIgnoreCase("at break")
+                    || statusKey.equalsIgnoreCase("at lunch")
+                    || statusKey.equalsIgnoreCase("at a training session")
+                    || statusKey.equalsIgnoreCase("in a meeting")
+                    || statusKey.equalsIgnoreCase("coaching session")) {
+                agent.addBreaksAndOtherTime(duration);
+            }
+            
             if (statusGroup.equalsIgnoreCase("followup")) {
                 agent.addAcwTime(duration);
             }
