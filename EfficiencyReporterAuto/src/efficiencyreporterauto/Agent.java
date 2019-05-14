@@ -38,6 +38,7 @@ public class Agent implements Comparable<Agent> {
     private Duration workingTime;
     private Duration talkTime;
     private Duration acwTime;
+    private Duration breaksAndOtherTime;
 
     public Agent(String userID) {
         timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -48,6 +49,7 @@ public class Agent implements Comparable<Agent> {
         workingTime = Duration.ZERO;
         talkTime = Duration.ZERO;
         acwTime = Duration.ZERO;
+        breaksAndOtherTime = Duration.ZERO;
     }
 
     String getUserID() {
@@ -109,7 +111,16 @@ public class Agent implements Comparable<Agent> {
         LocalTime additionalTime = parseTime(someTime);
         this.acwTime = acwTime.plus(Agent.getTimeAsDuration(additionalTime));
     }
+    
+    void addBreaksAndOtherTime(String someTime) {
+        LocalTime additionalTime = parseTime(someTime);
+        this.breaksAndOtherTime = breaksAndOtherTime.plus(Agent.getTimeAsDuration(additionalTime));
+    }
 
+    Duration getBreaksAndOtherTime() {
+        return breaksAndOtherTime;
+    }
+    
     private LocalTime parseTime(String someTime) {
         LocalTime additionalTime = LocalTime.MIN;
         try {
@@ -134,6 +145,7 @@ public class Agent implements Comparable<Agent> {
         double dWorkingTime = getWorkingTime().toMillis() / 1000.0;
         double dTalkTime = getTalkTime().toMillis() / 1000.0;
         double dAcwTime = getAcwTime().toMillis() / 1000.0;
+        double dBreaksAndOtherTime = getBreaksAndOtherTime().toMillis() / 1000.0;
         String fullname = getFname() + " " + getLname();
 
         joiner.add(fullname);
@@ -141,6 +153,7 @@ public class Agent implements Comparable<Agent> {
         joiner.add(String.valueOf(dWorkingTime / 60));
         joiner.add(String.valueOf(dTalkTime / 60));
         joiner.add(String.valueOf(dAcwTime / 60));
+        joiner.add(String.valueOf(dBreaksAndOtherTime / 60));
 
         return joiner.toString();
     }
