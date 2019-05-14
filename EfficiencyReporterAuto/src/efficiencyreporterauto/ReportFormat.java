@@ -265,7 +265,7 @@ public class ReportFormat {
         //Column N style TCPH
         for (int i = topRow; i < maxRow; i++) {
             XSSFRow row = sheet.getRow(i);
-            row.getCell(13).setCellStyle(lightGreenStyle);
+            row.getCell(13).setCellStyle(lightGreenDecimalStyle);
         }
     }
 
