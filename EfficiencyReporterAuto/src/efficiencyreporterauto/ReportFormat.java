@@ -29,6 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author JShepherd
  */
 public class ReportFormat {
+    
 
     //Change ReportFormat to an abstract class then Outsource this static stuff
     //to a new class that implements ReportFormat.
@@ -72,6 +73,11 @@ public class ReportFormat {
         }
         return targetFile;
     }
+    
+    //efficiency score thresholds
+    private String goodScore = "0.82";
+    private String midlingScore = "0.719";
+    private String poorScore = "0.72";
 
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
@@ -445,20 +451,20 @@ public class ReportFormat {
 
     private void setConditionalFormatting() {
         SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
-        ConditionalFormattingRule greaterThan82 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".82");
-        ConditionalFormattingRule greaterThan72 = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, ".719");
-        ConditionalFormattingRule lessThan72 = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, ".72");
+        ConditionalFormattingRule greaterThanGoodScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, goodScore);
+        ConditionalFormattingRule greaterThanMidlingScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, midlingScore);
+        ConditionalFormattingRule lessThanPoorScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, poorScore);
 
-        PatternFormatting lessThan70Format = lessThan72.createPatternFormatting();
-        lessThan70Format.setFillBackgroundColor(IndexedColors.RED.getIndex());
+        PatternFormatting poorScoreFormat = lessThanPoorScore.createPatternFormatting();
+        poorScoreFormat.setFillBackgroundColor(IndexedColors.RED.getIndex());
 
-        PatternFormatting greaterThan70Format = greaterThan72.createPatternFormatting();
-        greaterThan70Format.setFillBackgroundColor(myYellow);
+        PatternFormatting midlingScoreFormat = greaterThanMidlingScore.createPatternFormatting();
+        midlingScoreFormat.setFillBackgroundColor(myYellow);
 
-        PatternFormatting greaterThan80Format = greaterThan82.createPatternFormatting();
-        greaterThan80Format.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        PatternFormatting goodScoreFormat = greaterThanGoodScore.createPatternFormatting();
+        goodScoreFormat.setFillBackgroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 
-        ConditionalFormattingRule[] cfRules = {greaterThan82, greaterThan72, lessThan72};
+        ConditionalFormattingRule[] cfRules = {greaterThanGoodScore, greaterThanMidlingScore, lessThanPoorScore};
 
         CellRangeAddress[] regions = {
             CellRangeAddress.valueOf("L5:L" + maxRow)
