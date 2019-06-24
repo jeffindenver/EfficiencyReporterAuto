@@ -75,9 +75,9 @@ public class ReportFormat {
     }
     
     //efficiency score thresholds
-    private String goodScore = "0.82";
-    private String midlingScore = "0.719";
-    private String poorScore = "0.72";
+    private final String goodScore = "0.82";
+    private final String midlingScore = "0.719";
+    private final String poorScore = "0.72";
 
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
