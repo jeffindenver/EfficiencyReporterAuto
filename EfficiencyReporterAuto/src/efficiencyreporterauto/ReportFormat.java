@@ -75,9 +75,9 @@ public class ReportFormat {
     }
     
     //efficiency score thresholds
-    private final String goodScore = "0.82";
-    private final String midlingScore = "0.719";
-    private final String poorScore = "0.72";
+    private String goodScore = "0.82";
+    private String midlingScore = "0.719";
+    private String poorScore = "0.72";
 
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
@@ -101,12 +101,16 @@ public class ReportFormat {
     private final int COLUMN_SIZE = 14;
 
     public ReportFormat(int max, String date) {
+        System.out.println("default thresholds used");
         this.wb = new XSSFWorkbook();
         initializeSheet(wb, max, date);
         buildSheet(date);
     }
 
-    public ReportFormat(Workbook workbook, int maxRow, String date) {
+    public ReportFormat(Workbook workbook, int maxRow, String date, String[] thresholds) {
+        goodScore = thresholds[0];
+        midlingScore = thresholds[1];
+        poorScore = thresholds[2];
         this.wb = (XSSFWorkbook) workbook;
         initializeSheet(wb, maxRow, date);
         buildSheet(date);
