@@ -31,8 +31,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ReportFormat {
     
 
-    //Change ReportFormat to an abstract class then Outsource this static stuff
-    //to a new class that implements ReportFormat.
+    //Change ReportFormat to read a map of key/value pairs for the keyword and 
+    //output filename.
     public final static String[] WORKGROUP_NAMES = {"CellOne", "Drobo", "Homesnap",
         "MSRB", "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
 
