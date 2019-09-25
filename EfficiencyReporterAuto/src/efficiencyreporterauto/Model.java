@@ -23,17 +23,34 @@ public class Model {
     private List<String> source;
     private String dateline;
     private String outputFilename;
+    private final String thresholds[];
 
     public Model() {
         agents = new ArrayList<>();
         source = new ArrayList<>();
+        this.thresholds = setThresholds();
+    }
+
+    private String[] setThresholds() {
+        FileOps fo = new FileOps("AgentThresholds.txt", true);
+        String[] values;
+        values = new String[]{"0", "0", "0"};
+        try {
+            values = fo.readToArray();
+        } catch (IOException ex) {
+            System.err.println("AgentThresholds.txt not found");
+        }
+        for (String str : values) {
+            System.out.println(str);
+        }
+        return thresholds;
     }
 
     void setSource(List<String> list) {
         List<String> lowerCaseList = list.stream()
                 .map(s -> s.toLowerCase())
                 .collect(Collectors.toList());
-        
+
         this.source = new ArrayList<>(lowerCaseList);
     }
 
@@ -42,13 +59,13 @@ public class Model {
 
         int USER_ID_INDEX = 0;
         int correctLength = 6;
-        
+
         List<String> targetList = new ArrayList<>();
         for (String line : source) {
             String[] splitLine = line.split(",");
             if (splitLine.length == correctLength) {
                 if (!targetList.contains(splitLine[USER_ID_INDEX]) //avoid duplicate names
-                    && !splitLine[USER_ID_INDEX].equalsIgnoreCase("User ID")) { //avoid header
+                        && !splitLine[USER_ID_INDEX].equalsIgnoreCase("User ID")) { //avoid header
                     targetList.add(splitLine[USER_ID_INDEX]);
                 }
             }
@@ -61,7 +78,7 @@ public class Model {
     void addFullName() {
         int fName = 1;
         int lName = 2;
-        
+
         for (Agent agent : agents) {
             for (String line : source) {
                 if (line.contains(agent.getUserID()) && agent.getFname().isEmpty()) {
@@ -85,7 +102,7 @@ public class Model {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
         Workbook wb = excelOps.openWorkbook(this.getOutputFilename());
-        this.reportFormat = new ReportFormat(wb, maxRow, dateline);
+        this.reportFormat = new ReportFormat(wb, maxRow, dateline, thresholds);
     }
 
     void cleanList(String target, String replacement) {
@@ -140,12 +157,11 @@ public class Model {
                     || statusKey.equalsIgnoreCase("coaching session")) {
                 agent.addBreaksAndOtherTime(duration);
             }
-            
+
             if (statusGroup.equalsIgnoreCase("followup")) {
                 agent.addAcwTime(duration);
             }
-        }
-        else {
+        } else {
             System.out.println(line);
             System.out.println("Cannot add stat: Invalid line length");
         }
