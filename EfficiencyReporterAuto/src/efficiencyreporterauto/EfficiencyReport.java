@@ -1,9 +1,11 @@
 package efficiencyreporterauto;
 
 /**
- * This is a second version of "EfficiencyReport" application. This version will 
+ * This is a third version of "EfficiencyReport" application. This version will 
  * read .xlsx files directly and then modifying or creating the same. 
- * Previous version has .csv input and output.
+ * Features of the third version include customizable thresholds for agent 
+ * efficiency, which was hard-coded previously, and a customizable map of
+ * keywords and filenames (k, v) so that new workgroups can be added.
  *
  * @author JShepherd
  */
