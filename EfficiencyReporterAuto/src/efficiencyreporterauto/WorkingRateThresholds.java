@@ -18,6 +18,7 @@ public class WorkingRateThresholds {
         try {
             values = readThresholdFile();
         } catch (IOException ex) {
+           System.err.println(ex.getMessage());
            System.out.println("Threshold values set to default.");
            values[0] = "0.82";
            values[1] = "0.719";
@@ -68,7 +69,6 @@ public class WorkingRateThresholds {
     public void setPoorScore(String poorScore) {
         this.poorScore = poorScore;
     }
-    
     
         
 }
