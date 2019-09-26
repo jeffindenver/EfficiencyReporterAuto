@@ -23,27 +23,10 @@ public class Model {
     private List<String> source;
     private String dateline;
     private String outputFilename;
-    private final String thresholds[];
-
+    
     public Model() {
         agents = new ArrayList<>();
         source = new ArrayList<>();
-        this.thresholds = setThresholds();
-    }
-
-    private String[] setThresholds() {
-        FileOps fo = new FileOps("AgentThresholds.txt", true);
-        String[] values;
-        values = new String[]{"0", "0", "0"};
-        try {
-            values = fo.readToArray();
-        } catch (IOException ex) {
-            System.err.println("AgentThresholds.txt not found");
-        }
-        for (String str : values) {
-            System.out.println(str);
-        }
-        return thresholds;
     }
 
     void setSource(List<String> list) {
@@ -102,7 +85,7 @@ public class Model {
         ExcelOps excelOps = new ExcelOps();
         int maxRow = agents.size();
         Workbook wb = excelOps.openWorkbook(this.getOutputFilename());
-        this.reportFormat = new ReportFormat(wb, maxRow, dateline, thresholds);
+        this.reportFormat = new ReportFormat(wb, maxRow, dateline);
     }
 
     void cleanList(String target, String replacement) {
