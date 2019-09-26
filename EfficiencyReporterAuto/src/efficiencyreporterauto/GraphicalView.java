@@ -1,11 +1,14 @@
 package efficiencyreporterauto;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
@@ -16,6 +19,7 @@ import javax.swing.WindowConstants;
 class GraphicalView {
 
     private final JFrame frame;
+    private final JTabbedPane tabbedPane;
     private final JTextArea textArea;
 
     GraphicalView() {
@@ -23,20 +27,28 @@ class GraphicalView {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setBounds(40, 40, 600, 300);
 
-        textArea = new JTextArea("Efficiency Reporter.");
+        tabbedPane = new JTabbedPane();
+        
+        JPanel textPanel = new JPanel();
+        textPanel.setPreferredSize(new Dimension(600,300));
+        textArea = createTextArea();
+
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setOpaque(false);
-        Insets inset = new Insets(20, 20, 20, 20);
-        textArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        textArea.setMargin(inset);
-        textArea.setEditable(false);
-        textArea.setBackground(new Color(0, 166, 255));
-        textArea.setForeground(Color.black);
+        
+        textPanel.add(scrollPane);
+        
+        JPanel optionsPanel = createOptionsArea();
 
-        frame.add(scrollPane);
+        tabbedPane.addTab("Main", textPanel);
+        tabbedPane.addTab("Options", optionsPanel);
+        
+        frame.add(tabbedPane);
+        frame.pack();
         frame.setVisible(true);
     }
 
+       
     JTextArea getTextArea() {
         return textArea;
     }
@@ -49,4 +61,22 @@ class GraphicalView {
         textArea.append("\n");
         textArea.append(msg);
     }
+
+    private JTextArea createTextArea() {
+        JTextArea aTextArea = new JTextArea("Efficiency Reporter.");
+        aTextArea.setPreferredSize(new Dimension(600, 300));
+        Insets inset = new Insets(20, 20, 20, 20);
+        aTextArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        aTextArea.setMargin(inset);
+        aTextArea.setEditable(false);
+        aTextArea.setBackground(new Color(0, 166, 255));
+        aTextArea.setForeground(Color.black);
+        return aTextArea;
+    }
+    
+    private JPanel createOptionsArea() {
+        JPanel aJPanel = new JPanel();
+        return aJPanel;
+    }
+        
 }
