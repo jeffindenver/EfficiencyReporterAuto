@@ -75,9 +75,10 @@ public class ReportFormat {
     }
     
     //efficiency score thresholds
-    private String goodScore = "0.82";
-    private String midlingScore = "0.719";
-    private String poorScore = "0.72";
+//    private String goodScore = "0.82";
+//    private String midlingScore = "0.719";
+//    private String poorScore = "0.72";
+    private WorkingRateThresholds thresholds;
 
     private final XSSFWorkbook wb;
     private XSSFSheet sheet;
@@ -107,15 +108,17 @@ public class ReportFormat {
         buildSheet(date);
     }
 
-    public ReportFormat(Workbook workbook, int maxRow, String date, String[] thresholds) {
-        goodScore = thresholds[0];
-        midlingScore = thresholds[1];
-        poorScore = thresholds[2];
+    public ReportFormat(Workbook workbook, int maxRow, String date) {
+        setThresholds();
         this.wb = (XSSFWorkbook) workbook;
         initializeSheet(wb, maxRow, date);
         buildSheet(date);
     }
 
+    private void setThresholds() {
+        thresholds = new WorkingRateThresholds();
+    }
+        
     private void initializeSheet(Workbook wb, int maxRow, String date) {
         this.sheet = (XSSFSheet) wb.createSheet(composeSheetName(date));
         this.maxRow = maxRow + HEADER_SIZE;
@@ -455,9 +458,9 @@ public class ReportFormat {
 
     private void setConditionalFormatting() {
         SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
-        ConditionalFormattingRule greaterThanGoodScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, goodScore);
-        ConditionalFormattingRule greaterThanMidlingScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, midlingScore);
-        ConditionalFormattingRule lessThanPoorScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, poorScore);
+        ConditionalFormattingRule greaterThanGoodScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, thresholds.getGoodScore());
+        ConditionalFormattingRule greaterThanMidlingScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.GE, thresholds.getMidlingScore());
+        ConditionalFormattingRule lessThanPoorScore = sheetCF.createConditionalFormattingRule(ComparisonOperator.LT, thresholds.getPoorScore());
 
         PatternFormatting poorScoreFormat = lessThanPoorScore.createPatternFormatting();
         poorScoreFormat.setFillBackgroundColor(IndexedColors.RED.getIndex());
