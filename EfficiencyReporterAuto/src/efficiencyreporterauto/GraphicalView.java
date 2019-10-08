@@ -3,13 +3,20 @@ package efficiencyreporterauto;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import static java.awt.GridBagConstraints.FIRST_LINE_START;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 /**
@@ -38,7 +45,7 @@ class GraphicalView {
         
         textPanel.add(scrollPane);
         
-        JPanel optionsPanel = createOptionsArea();
+        JPanel optionsPanel = createOptionsPanel();
 
         tabbedPane.addTab("Main", textPanel);
         tabbedPane.addTab("Options", optionsPanel);
@@ -74,9 +81,62 @@ class GraphicalView {
         return aTextArea;
     }
     
-    private JPanel createOptionsArea() {
-        JPanel aJPanel = new JPanel();
-        return aJPanel;
-    }
+    private JPanel createOptionsPanel() {
+        JPanel optionsArea = new JPanel(new GridLayout(3,1));
+        optionsArea.setBackground(new Color(0, 166, 255));
         
+        JPanel labelPanel = new JPanel();
+        labelPanel.setOpaque(false);
+        JLabel label = new JLabel("Enter the new thresholds below.");
+        labelPanel.add(label);
+        optionsArea.add(labelPanel );
+        optionsArea.add(createThresholdsUserInputArea());
+        
+        JButton saveButton = new JButton("Save");
+        saveButton.setPreferredSize(new Dimension(80,30));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        
+        buttonPanel.add(saveButton);
+        
+        optionsArea.add(buttonPanel);
+        return optionsArea;
+    }
+       
+    private JPanel createThresholdsUserInputArea() {
+        JPanel optionsPanel = new JPanel(new GridBagLayout());
+        optionsPanel.setOpaque(false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = FIRST_LINE_START;
+        Insets insets = new Insets(10,10,10,10);
+        c.insets = insets;
+
+        JLabel goodScore = new JLabel("Good score is greater than :");
+        JLabel midScore = new JLabel("Midling score is greater than :");
+        JLabel poorScore = new JLabel("Poor score is anything less than :");
+        
+        c.gridy = 0;
+        optionsPanel.add(goodScore, c);
+        c.gridy = 1;
+        optionsPanel.add(midScore, c);
+        c.gridy = 2;
+        optionsPanel.add(poorScore, c);
+        
+        int columns = 2;
+        JTextField fieldOne = new JTextField(columns);
+        JTextField fieldTwo = new JTextField(columns);
+        JTextField fieldThree = new JTextField(columns);
+        
+        c.gridx = 1;
+        c.gridy = 0;
+        optionsPanel.add(fieldOne, c);
+        
+        c.gridy = 1;
+        optionsPanel.add(fieldTwo, c);
+        
+        c.gridy = 2;
+        optionsPanel.add(fieldThree, c);
+
+        return optionsPanel;
+    }
 }
