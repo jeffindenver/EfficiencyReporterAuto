@@ -33,37 +33,21 @@ public class ReportFormat {
 
     //Change ReportFormat to read a map of key/value pairs for the keyword and 
     //output filename.
-    public final static String[] WORKGROUP_NAMES = {"CellOne", "Drobo", "Homesnap",
-        "MSRB", "Newmark", "Orbit", "Shared", "Xplore", "YKHC"};
+    public final static String[] WORKGROUP_NAMES = {"MSRB", "Orbit", "Shared", "YKHC"};
 
     public final static String FILEPATH = "S:\\Reports\\Efficiency Reports\\";
 
     static String selectTargetFile(String name) {
         String targetFile = ReportFormat.FILEPATH;
         switch (name) {
-            case "CellOne":
-                targetFile += "CellOne Efficiency 2019.xlsx";
-                break;
-            case "Drobo":
-                targetFile += "Drobo Efficiency 2019.xlsx";
-                break;
-            case "Homesnap":
-                targetFile += "Homesnap Efficiency 2019.xlsx";
-                break;
             case "MSRB":
                 targetFile += "MSRB Efficiency 2019.xlsx";
-                break;
-            case "Newmark":
-                targetFile += "Newmark Efficiency 2019.xlsx";
                 break;
             case "Orbit":
                 targetFile += "Orbit Efficiency 2019.xlsx";
                 break;
             case "Shared":
                 targetFile += "Shared Support Efficiency 2019.xlsx";
-                break;
-            case "Xplore":
-                targetFile += "Xplore Efficiency 2019.xlsx";
                 break;
             case "YKHC":
                 targetFile += "YKHC Efficiency 2019.xlsx";
@@ -74,10 +58,6 @@ public class ReportFormat {
         return targetFile;
     }
     
-    //efficiency score thresholds
-//    private String goodScore = "0.82";
-//    private String midlingScore = "0.719";
-//    private String poorScore = "0.72";
     private WorkingRateThresholds thresholds;
 
     private final XSSFWorkbook wb;
